@@ -1,0 +1,8 @@
+.thumbnail{
+    width: 85px;
+}
+.widMarginLeft{
+    width: 100%;
+    margin-right: 100px;
+    float: left;
+}

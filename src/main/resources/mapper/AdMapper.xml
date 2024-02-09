@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.lhit.myBlog.module.mapper.AdMapper">
+    <select id="adList" resultType="top.lhit.myBlog.module.vo.AdVo">
+        SELECT
+        ad.*,
+        ad_type.ad_type_title
+        FROM
+        ad
+        LEFT JOIN ad_type ON ad.ad_type_id = ad_type.ad_type_id
+        <where>
+            <if test="adTypeId != null and adTypeId != ''">
+                ad.ad_type_id = #{adTypeId}
+            </if>
+        </where>
+        order by ad.ad_sort
+    </select>
+</mapper>

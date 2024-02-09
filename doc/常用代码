@@ -1,0 +1,97 @@
+jquery选择 根据 单选框的 value来选中：
+ $(":radio[name='userFrozen'][value='" + userFrozen + "']").prop("checked", "checked");
+
+jquery  获取 radio 选中的值
+let userFrozen = $("input[name='userFrozen']:checked").val();
+
+jquery  根据值选中对于的项
+$('#adTypeId option[value="'+adTypeId+'"]').prop("selected","selected");
+
+jquery post提交：
+$.post("/unknn/ad/del", {
+                    adId: adId
+                },
+                function (data) {
+                    if (data.code == 200) {
+                        alert(data.message)
+                        location.reload();
+                        return;
+                    }
+                    zuiMsg(data.message);
+                });
+
+ 分页：
+  <div class="panel">
+         <div class="panel-body" style="padding: 0;">
+             <div class="col-sm-12" style="padding: 0;text-align: center;">
+                 <ul class="pager" style="margin-top: 10px;margin-bottom: 10px;">
+                     <li class="previous" onclick="getNewData(1)">
+                         <a href="javascript:void(0)"><i class="icon-step-backward"></i></a>
+                     </li>
+
+                     <#if userPage.pageNumber lte 1>
+                         <li class="previous disabled">
+                             <a href="javascript:void(0)"><i class="icon-chevron-left"></i></a>
+                         </li>
+                     <#else>
+                         <li class="previous" onclick="getNewData('${userPage.pageNumber-1}')">
+                             <a href="javascript:void(0)"><i class="icon-chevron-left"></i></a>
+                         </li>
+                     </#if>
+                     <li>
+                         <a href="javascript:void(0)" class="btn">
+                             ${userPage.pageNumber}页/共${userPage.totalPage}</a>
+                     </li>
+                     <#if userPage.pageNumber gte userPage.totalPage>
+                         <li class="next disabled">
+                             <a href="javascript:void(0)"><i class="icon-chevron-right"></i></a>
+                         </li>
+                     <#else>
+                         <li class="next" onclick="getNewData('${userPage.pageNumber+1}')">
+                             <a href="javascript:void(0)"><i class="icon-chevron-right"></i></a>
+                         </li>
+                     </#if>
+                     <li class="previous" onclick="getNewData('${userPage.totalPage}')">
+                         <a href="javascript:void(0)"><i class="icon-step-forward"></i></a>
+                     </li>
+
+
+                     <li class="next">
+                         <a href="javascript:void(0)">
+                             <input type="number" id="renderPageNumber" maxlength="5"
+                                    style="width:50px;height: 20px;" oninput="value=value.replace(/[^\d]/g,'')">
+                         </a>
+                     </li>
+                     <li class="next">
+                         <a href="javascript:void(0)" onclick="renderPage()"
+                            style="padding-left: 2px;padding-right: 2px;">
+                             跳转
+                         </a>
+                     </li>
+                 </ul>
+             </div>
+         </div>
+     </div>
+
+      function getNewData(pageNumber) {
+             if (!checkNotNull(pageNumber)) {
+                 pageNumber = 1;
+             }
+             window.location.href = "/unknn/user/list?pageNumber=" + pageNumber + "<#if (userName?? && userName?length>0)>&userName=${userName!}</#if>";
+         }
+
+         function renderPage() {
+             let renderPageNumber = $("#renderPageNumber").val();
+             if (!checkNotNull(renderPageNumber)) {
+                 new $.zui.Messager("请输入跳转的页码！", {
+                     type: 'warning',
+                     placement: 'center'
+                 }).show();
+                 return;
+             }
+             let totalPage = '${userPage.totalPage}';
+             if (parseInt(renderPageNumber) > parseInt(totalPage)) {
+                 renderPageNumber = totalPage;
+             }
+             getNewData(renderPageNumber);
+         }

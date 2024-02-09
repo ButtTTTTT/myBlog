@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.lhit.myBlog.module.mapper.CommentMapper">
+
+    <select id="getArticleCommentList" resultType="top.lhit.myBlog.module.vo.CommentVo">
+        SELECT
+        com.*,
+        u.user_name
+        FROM
+        `comment` com
+        LEFT JOIN `user` u ON com.user_id = u.user_id
+
+        <where>
+            <if test="articleId != null and articleId != '' ">
+                com.article_id = #{articleId}
+            </if>
+        </where>
+    </select>
+</mapper>

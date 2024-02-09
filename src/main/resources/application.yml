@@ -1,0 +1,75 @@
+#项目相关配置
+myBlog:
+  #名称
+  name: myBlog
+  #版本
+  version: 0.1.1
+server:
+  port: 2000
+  tomcat:
+    # tomcat的URI编码
+    uri-encoding: UTF-8
+    # 连接数满后的排队数，默认为100
+    accept-count: 20
+    threads:
+      # tomcat最大线程数，默认为200
+      max: 40
+      # Tomcat启动初始化的线程数，默认值10
+      min-spare: 20
+  #设置会话时间
+  servlet:
+    session:
+      #Session超时时间设置为2小时，单位是秒，默认是30分钟
+      timeout: 12000
+spring:
+  #静态文件地址
+  resources:
+    static-locations: classpath:static/,file:static/
+    #模板设置
+  thymeleaf:
+    cache: false
+    #数据源
+  datasource:
+    url: jdbc:mysql://39.101.142.240:3306/myBlog?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=CONVERT_TO_NULL
+    username: root
+    password: UnKnnow@lhit.top419179
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+#模板插件
+  freemarker:
+    # 设置模板后缀名
+    suffix: .ftl
+    # 设置文档类型
+    content-type: text/html
+    # 设置页面编码格式
+    charset: UTF-8
+    # 设置页面缓存
+    cache: true
+    settings:
+      number_format: 0.##
+      #mp 配置
+mybatis-plus:
+  type-aliases-package: top.lhit.module.entity
+  configuration:
+    call-setters-on-nulls: false
+    #开启驼峰
+    map-underscore-to-camel-case: true
+    #自动映射行为
+    auto-mapping-behavior: full
+
+  mapper-locations: classpath*:mapper/**/*Mapper.xml
+  global-config:
+    banner: false
+    db-config:
+      #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+      id-type: uuid
+      logic-not-delete-value: 1
+      logic-delete-value: 0
+logging:
+  level:
+    root: info #日志配置DEBUG,INFO,WARN,ERRO
+  file:
+    name: D:/logs/myBlog.log   # 日志文件的路径和名称
+    max-history: 30   # 保留的日志文件最大数量，超过这个数量，会从最旧的文件开始删除
+    max-size: 10MB   # 单个日志文件的最大大小，超过这个大小会创建新的日志文件
+    total-size-cap: 500MB   # 所有日志文件的总大小限制，超过这个大小，会从最旧的文件开始删除

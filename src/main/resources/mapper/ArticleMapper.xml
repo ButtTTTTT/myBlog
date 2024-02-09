@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.lhit.myBlog.module.mapper.ArticleMapper">
+    <sql id="articleVoInfoSql">
+        SELECT art.article_id,
+               art.article_type_id,
+               art.article_cover_url,
+               art.article_hot,
+               u.user_id,
+               u.user_name,
+               art.article_title,
+               art.article_add_time,
+               art.article_faverite_No,
+               art.article_watch_times,
+               art.article_faver_rate,
+               artt.article_type_name
+        FROM article art
+                 LEFT JOIN article_type AS artt ON art.article_type_id = artt.article_type_id
+                 LEFT JOIN user u on u.user_id = art.user_id
+    </sql>
+
+    <select id="articleList" resultType="top.lhit.myBlog.module.vo.ArticleVo">
+        <include refid="articleVoInfoSql"></include>
+        <where>
+            <if test="articleTitle != null and articleTitle != ''">
+                and art.article_title like concat ('%',#{articleTitle},'%')
+            </if>
+            <if test="userId != null and userId != ''">
+                and art.user_id = #{userId}
+            </if>
+        </where>
+        ORDER BY art.article_add_time desc
+    </select>
+    <select id="getArticle" resultType="top.lhit.myBlog.module.vo.ArticleVo">
+        SELECT
+        art.article_id,
+        art.article_type_id,
+        art.article_cover_url,
+        art.article_context,
+        u.user_id,
+        u.user_name,
+        art.article_title,
+        art.article_add_time,
+        art.article_faverite_No,
+        art.article_watch_times,
+        art.article_faver_rate,
+        artt.article_type_name
+        FROM
+        article art
+        LEFT JOIN article_type AS artt ON art.article_type_id = artt.article_type_id
+        LEFT JOIN user u on u.user_id = art.user_id
+        <where>
+            <if test="articleId != null and articleId != ''">
+                and art.article_id = #{articleId}
+            </if>
+        </where>
+    </select>
+    <select id="tagArticleList" resultType="top.lhit.myBlog.module.vo.ArticleVo">
+        SELECT
+        atl.article_id,
+        art.article_type_id,
+        art.article_cover_url,
+        art.article_title,
+        art.article_add_time,
+        art.article_faverite_No,
+        art.article_watch_times,
+        art.article_faver_rate
+
+        FROM
+        article_tag_list atl
+        LEFT JOIN article art ON atl.article_id = art.article_id
+
+        <where>
+            not ISNULL(art.article_title)
+            <if test="articleTagId != null and articleTagId != '' ">
+                and atl.article_tag_id = #{articleTagId}
+            </if>
+        </where>
+
+    </select>
+    <select id="articleListView" resultType="top.lhit.myBlog.module.vo.ArticleVo">
+        <include refid="articleVoInfoSql"></include>
+
+        <where>
+            <if test="articleTitle != null and articleTitle != ''">
+                and art.article_title like concat ('%',#{articleTitle},'%')
+            </if>
+            <if test="articleTypeId != null and articleTypeId != ''">
+                and art.article_type_id = #{articleTypeId}
+            </if>
+        </where>
+        ORDER BY art.article_add_time desc
+    </select>
+    <select id="getIndexArticleList" resultType="top.lhit.myBlog.module.vo.ArticleVo">
+        SELECT art.article_id,
+               art.article_cover_url,
+               art.article_type_id,
+               art.article_title,
+               art.article_add_time,
+               art.article_good_number,
+               art.article_look_number,
+               art.article_collection_number,
+               artt.article_type_name
+        FROM article art
+                 LEFT JOIN article_type AS artt ON art.article_type_id = artt.article_type_id
+        ORDER BY art.article_add_time desc LIMIT 20
+    </select>
+</mapper>

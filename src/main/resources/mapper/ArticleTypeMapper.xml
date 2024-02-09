@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.lhit.myBlog.module.mapper.ArticleTypeMapper">
+<select id="articleTypeList" resultType="top.lhit.myBlog.module.vo.ArticleTypeVo">
+    select
+        article_type_id, article_type_parent_id, article_type_name, article_type_sort, article_type_add_Time,
+        (select count(1) from article_type where article_type_id = at.article_type_id) as articleCount
+    from article_type at
+    order by at.article_type_sort
+</select>
+
+    <select id="getIndexArticleTypeList" resultType="top.lhit.myBlog.module.vo.ArticleTypeTreeVo">
+        SELECT
+        aty.article_type_id,
+        aty.article_type_name
+        FROM
+        article_type aty
+        WHERE 1=1
+        <choose>
+            <when test="articleTypeParentId != null and articleTypeParentId != ''">
+                and aty.article_type_parent_id = #{articleTypeParentId}
+            </when>
+            <otherwise>
+                and aty.article_type_parent_id = NULL
+                OR aty.article_type_parent_id = ''
+            </otherwise>
+        </choose>
+        ORDER BY
+        aty.article_type_sort
+
+    </select>
+</mapper>
