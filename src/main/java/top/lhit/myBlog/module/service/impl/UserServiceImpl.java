@@ -1,4 +1,6 @@
 package top.lhit.myBlog.module.service.impl;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
@@ -12,6 +14,7 @@ import org.springframework.ui.Model;
 import top.lhit.myBlog.common.utils.CommonPage;
 import top.lhit.myBlog.common.utils.CommonResult;
 import top.lhit.myBlog.module.dto.user.UserDto;
+import top.lhit.myBlog.module.dto.user.UserInfoDto;
 import top.lhit.myBlog.module.dto.user.UserListPageDto;
 import top.lhit.myBlog.module.entity.Article;
 import top.lhit.myBlog.module.entity.User;
@@ -20,6 +23,10 @@ import top.lhit.myBlog.module.service.IArticleService;
 import top.lhit.myBlog.module.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 /**
@@ -132,6 +139,77 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             model.addAttribute("userPage", CommonPage.restPage(page));
             System.out.println("接口被请求了");
             return "/unknn/userList";
+        });
+    }
+
+    @Override
+    public CompletionStage<CommonResult> userRegist(HttpServletRequest request, UserInfoDto userInfoDto) {
+        return CompletableFuture.supplyAsync(()->{
+            HttpSession session = request.getSession();
+            String verifyCode = userInfoDto.getVerifyCode();
+            if (StrUtil.isBlank(verifyCode) || !verifyCode.equals(session.getAttribute("circleCaptchaCode"))) {
+                session.removeAttribute("circleCaptchaCode");
+                return CommonResult.failed("验证码不正确");
+            }
+            //用户名和密码是否相同
+            if (userInfoDto.getUserName().equals(userInfoDto.getUserPassword())) {
+                session.removeAttribute("circleCaptchaCode");
+                return CommonResult.failed("用户名和密码不能相同哦");
+            }
+
+            //用户名是否已经被使用
+            if (userService.count(Wrappers.<User>lambdaQuery().eq(User::getUserName, userInfoDto.getUserName())) > 0) {
+                session.removeAttribute("circleCaptchaCode");
+                return CommonResult.failed("客官！该用户名已经存在哦");
+            }
+
+            User user = new User();
+            BeanUtils.copyProperties(userInfoDto, user);
+            user.setUserId(IdUtil.simpleUUID());
+            user.setUserRegisterTime(DateUtil.date());
+            user.setUserPassword(SecureUtil.md5(user.getUserId() + user.getUserPassword()));
+            user.setUserStatus(1);
+            user.setUserPublishable(1);
+            if (userService.save(user)) {
+                return CommonResult.success("注册成功");
+            }
+
+            return CommonResult.failed("哎呀！注册失败啦，刷新页面再试一次哦~");
+        });
+    }
+
+    @Override
+    public CompletionStage<CommonResult> userLogin(HttpServletRequest request, UserInfoDto userInfoDto) {
+        return CompletableFuture.supplyAsync(()->{
+            HttpSession session = request.getSession();
+            String verifyCode = userInfoDto.getVerifyCode();
+            if (StrUtil.isBlank(verifyCode) || !verifyCode.equals(session.getAttribute("circleCaptchaCode"))) {
+                session.removeAttribute("circleCaptchaCode");
+                return CommonResult.failed("验证码不正确");
+            }
+            //用户名和密码是否相同
+            if (userInfoDto.getUserName().equals(userInfoDto.getUserPassword())) {
+                session.removeAttribute("circleCaptchaCode");
+                return CommonResult.failed("用户名和密码不能相同哦");
+            }
+
+            //获取用户
+            User userDb = userService.getOne(Wrappers.<User>lambdaQuery().eq(User::getUserName, userInfoDto.getUserName()), false);
+            if (Objects.isNull(userDb)) {
+                session.removeAttribute("circleCaptchaCode");
+                return CommonResult.failed("用户名错误");
+            }
+            if (Objects.nonNull(userDb.getUserStatus()) && userDb.getUserStatus() == 0) {
+                session.removeAttribute("circleCaptchaCode");
+                return CommonResult.failed("您的账户已经被冻结，暂无法登录，请联系管理员");
+            }
+
+            if (!SecureUtil.md5(userDb.getUserId() + userInfoDto.getUserPassword()).equals(userDb.getUserPassword())) {
+                session.removeAttribute("circleCaptchaCode");
+                return CommonResult.failed("密码错误");
+            }
+            session.setAttribute("user", userDb);
+            return CommonResult.success("登录成功");
         });
     }
 }

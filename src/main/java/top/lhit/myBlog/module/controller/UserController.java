@@ -1,14 +1,11 @@
 package top.lhit.myBlog.module.controller;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import top.lhit.myBlog.common.utils.CommonPage;
+import top.lhit.myBlog.common.utils.CommonResult;
 import top.lhit.myBlog.module.dto.PublishArticleActionDto;
 import top.lhit.myBlog.module.entity.*;
 import top.lhit.myBlog.module.service.*;
@@ -33,8 +31,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
-import top.lhit.myBlog.common.utils.*;
-import top.lhit.myBlog.module.vo.CommentVo;
 
 /**
  * @Title: UserController
@@ -200,16 +196,8 @@ public class UserController {
      */
     @PostMapping("/getArticleTypeChild")
     @ResponseBody
-    public CommonResult getArticleTypeChild(String articleTypeId) {
-        if (StrUtil.isBlank(articleTypeId)) {
-            return CommonResult.failed("请选择一级分类");
-        }
-
-        List<ArticleType> articleTypeList = articleTypeService.list(Wrappers.<ArticleType>lambdaQuery()
-                .eq(ArticleType::getArticleTypeParentId, articleTypeId)
-                .select(ArticleType::getArticleTypeId, ArticleType::getArticleTypeName));
-
-        return CommonResult.success(articleTypeList);
+    public CompletionStage<CommonResult> getArticleTypeChild(String articleTypeId) {
+        return articleTypeService.getArticleTypeChild(articleTypeId);
     }
 
 
@@ -224,12 +212,12 @@ public class UserController {
     public CommonResult publishArticleAction(HttpServletRequest request, @Valid PublishArticleActionDto publishArticleActionDto, MultipartFile articleCoverFile) throws IOException {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
-        if (Objects.isNull(user)){
+        if (Objects.isNull(user)) {
             return CommonResult.failed("登录过期，请重新登录");
         }
         User serviceById = userService.getById(user.getUserId());
-        if(Objects.isNull(serviceById)){
-            session.setAttribute("user",serviceById);
+        if (Objects.isNull(serviceById)) {
+            session.setAttribute("user", serviceById);
         }
         if (Objects.isNull(serviceById.getUserPublishable()) || serviceById.getUserPublishable() != 0) {
             return CommonResult.failed("当前您还没有权限发布，请联系管理员");
@@ -295,46 +283,8 @@ public class UserController {
      */
     @PostMapping("/saveComment")
     @ResponseBody
-    public CommonResult userSaveComment(HttpServletRequest request, String articleId, String commentContent,String commentId) {
-        if (StrUtil.isBlank(articleId) || StrUtil.isBlank(commentContent)) {
-            return CommonResult.failed("评论失败，请刷新页面重试");
-        }
-        if (commentContent.length() < 1 || commentContent.length() > 800) {
-            return CommonResult.failed("评论内容在1-800个字符之间！");
-        }
-
-
-        User user = (User) request.getSession().getAttribute("user");
-        if (Objects.isNull(user)) {
-            return CommonResult.failed("客官！您的登录过期，请从新登录哦");
-        }
-        String userId = user.getUserId();
-
-
-        Comment comment = commentService.getOne(Wrappers.<Comment>lambdaQuery().eq(Comment::getUserId, userId).select(Comment::getCommentTime).orderByDesc(Comment::getCommentTime), false);
-        if (Objects.nonNull(comment) && Objects.nonNull(comment.getCommentTime())) {
-            if ((comment.getCommentTime().getTime() + 10000) > System.currentTimeMillis()) {
-                return CommonResult.failed("客官您评论太快啦~~，休息一下吧");
-            }
-        }
-
-        Comment comment1 = new Comment();
-        comment1.setArticleId(articleId);
-        comment1.setUserId(userId);
-        comment1.setCommentContent(commentContent);
-        comment1.setCommentTime(DateUtil.date());
-        comment1.setCommentGoodNumber(0);
-
-        if (commentService.save(comment1)) {
-            CommentVo commentVo = new CommentVo();
-            BeanUtils.copyProperties(comment1, commentVo);
-            commentVo.setUserName(
-                    userService.getOne(Wrappers.<User>lambdaQuery().eq(User::getUserId, commentVo.getUserId()).select(User::getUserName)).getUserName()
-            );
-            commentVo.setCommentTime(DateUtil.format(comment1.getCommentTime(),"yyyy-MM-dd HH:mm:ss"));
-            return CommonResult.success(commentVo);
-        }
-        return CommonResult.failed("评论失败");
+    public CompletionStage<CommonResult> userSaveComment(HttpServletRequest request, String articleId, String commentContent, String commentId) {
+        return commentService.userSaveComment(request, articleId, commentContent, commentId);
     }
 
     /**

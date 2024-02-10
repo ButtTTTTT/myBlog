@@ -30,9 +30,9 @@ spring:
     cache: false
     #数据源
   datasource:
-    url: jdbc:mysql://39.101.142.240:3306/myBlog?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=CONVERT_TO_NULL
+    url: jdbc:mysql://127.0.0.1:3306/myBlog?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=CONVERT_TO_NULL
     username: root
-    password: UnKnnow@lhit.top419179
+    password: root
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
 #模板插件

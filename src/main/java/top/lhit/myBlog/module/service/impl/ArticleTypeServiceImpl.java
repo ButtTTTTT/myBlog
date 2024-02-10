@@ -20,7 +20,6 @@ import top.lhit.myBlog.module.vo.ArticleTypeVo;
 import javax.servlet.ServletContext;
 import java.util.List;
 import java.util.Objects;
-import java.util.UnknownFormatConversionException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
@@ -86,6 +85,7 @@ public class ArticleTypeServiceImpl extends ServiceImpl<ArticleTypeMapper, Artic
 
     /**
      * 文章类型删除
+     *
      * @param articleTypeId
      * @return
      */
@@ -112,7 +112,7 @@ public class ArticleTypeServiceImpl extends ServiceImpl<ArticleTypeMapper, Artic
 
     @Override
     public CompletionStage<CommonResult> articleTypeUpdate(ArticleTypeUpdateDto articleTypeUpdateDto) {
-        return CompletableFuture.supplyAsync(()->{
+        return CompletableFuture.supplyAsync(() -> {
             ArticleType articleType = new ArticleType();
             BeanUtils.copyProperties(articleTypeUpdateDto, articleType);
 
@@ -124,7 +124,7 @@ public class ArticleTypeServiceImpl extends ServiceImpl<ArticleTypeMapper, Artic
             if (Objects.isNull(articleTypeSort)) {
                 articleType.setArticleTypeSort(null);
             }
-            if(StrUtil.isNotBlank(articleType.getArticleTypeParentId()) && StrUtil.isNotBlank(articleType.getArticleTypeId()) && articleType.getArticleTypeParentId().equals(articleType.getArticleTypeId())){
+            if (StrUtil.isNotBlank(articleType.getArticleTypeParentId()) && StrUtil.isNotBlank(articleType.getArticleTypeId()) && articleType.getArticleTypeParentId().equals(articleType.getArticleTypeId())) {
                 return CommonResult.failed("不能将自己分配到自己的目录下");
             }
 
@@ -135,13 +135,30 @@ public class ArticleTypeServiceImpl extends ServiceImpl<ArticleTypeMapper, Artic
             return CommonResult.failed("添加失败");
         });
     }
+
     /**
      * 获取首页文章类型树形目录
+     *
      * @param articleTypeParentId
      * @return
      */
     @Override
     public List<ArticleTypeTreeVo> getIndexArticleTypeList(String articleTypeParentId) {
         return articleTypeMapper.getIndexArticleTypeList(articleTypeParentId);
+    }
+
+    @Override
+    public CompletionStage<CommonResult> getArticleTypeChild(String articleTypeId) {
+        return CompletableFuture.supplyAsync(() -> {
+            if (StrUtil.isBlank(articleTypeId)) {
+                return CommonResult.failed("请选择一级分类");
+            }
+
+            List<ArticleType> articleTypeList = articleTypeService.list(Wrappers.<ArticleType>lambdaQuery()
+                    .eq(ArticleType::getArticleTypeParentId, articleTypeId)
+                    .select(ArticleType::getArticleTypeId, ArticleType::getArticleTypeName));
+
+            return CommonResult.success(articleTypeList);
+        });
     }
 }

@@ -22,6 +22,7 @@ import top.lhit.myBlog.module.vo.ArticleVo;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -266,5 +267,25 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public IPage<ArticleVo> tagArticleList(Page<ArticleVo> articlePage, String articleTagId) {
         return articleMapper.tagArticleList(articlePage, articleTagId);
+    }
+
+    @Override
+    public CompletionStage<CommonResult> articleGoodIncrease(HttpServletRequest request, String articleId) {
+        return CompletableFuture.supplyAsync(()->{
+            HttpSession session = request.getSession();
+            if (Objects.nonNull(session.getAttribute("articleGoodTime"))) {
+                return CommonResult.failed("客官！您已经点过啦");
+            }
+
+            Article article = articleService.getById(articleId);
+            Integer articleGoodNumber = article.getArticleWatchTimes();
+            ++articleGoodNumber;
+            article.setArticleWatchTimes(articleGoodNumber);
+            if (articleService.updateById(article)) {
+                session.setAttribute("articleGoodTime", true);
+                return CommonResult.success("点赞成功！");
+            }
+            return CommonResult.failed("点赞失败");
+        });
     }
 }
