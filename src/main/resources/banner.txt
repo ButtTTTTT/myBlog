@@ -19,5 +19,5 @@
              ||       ||                  
              ||_.-.   ||_.-.
             (_.--__) (_.--__)
-Application Version: ${myBlog.version}
+Application project: ${myBlog.name} and in version:  ${myBlog.version}
 Spring Boot Version: ${spring-boot.version}
