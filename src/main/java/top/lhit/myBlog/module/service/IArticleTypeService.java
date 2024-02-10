@@ -2,14 +2,11 @@ package top.lhit.myBlog.module.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.lhit.myBlog.common.utils.CommonResult;
-import top.lhit.myBlog.module.dto.aticle.ArticleTypeDmlDto;
 import top.lhit.myBlog.module.dto.aticle.ArticleTypeUpdateDto;
 import top.lhit.myBlog.module.entity.ArticleType;
 import top.lhit.myBlog.module.vo.ArticleTypeTreeVo;
 import top.lhit.myBlog.module.vo.ArticleTypeVo;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
 
@@ -43,4 +40,6 @@ public interface IArticleTypeService extends IService<ArticleType> {
      * @return
      */
     List<ArticleTypeTreeVo> getIndexArticleTypeList(String articleTypeParentId);
+
+    CompletionStage<CommonResult> getArticleTypeChild(String articleTypeId);
 }

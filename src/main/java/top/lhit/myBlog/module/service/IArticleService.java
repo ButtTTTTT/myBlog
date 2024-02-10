@@ -89,4 +89,7 @@ public interface IArticleService extends IService<Article> {
     IPage<ArticleVo> tagArticleList(Page<ArticleVo> articlePage, String articleTagId);
 
 
+    CompletionStage<CommonResult> articleGoodIncrease(HttpServletRequest request, String articleId);
+
+
 }

@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
@@ -108,37 +109,8 @@ public class ViewController {
      */
     @PostMapping("/userRegister")
     @ResponseBody
-    public CommonResult userRegister(HttpServletRequest request, UserInfoDto userInfoDto) {
-        HttpSession session = request.getSession();
-        String verifyCode = userInfoDto.getVerifyCode();
-        if (StrUtil.isBlank(verifyCode) || !verifyCode.equals(session.getAttribute("circleCaptchaCode"))) {
-            session.removeAttribute("circleCaptchaCode");
-            return CommonResult.failed("验证码不正确");
-        }
-        //用户名和密码是否相同
-        if (userInfoDto.getUserName().equals(userInfoDto.getUserPassword())) {
-            session.removeAttribute("circleCaptchaCode");
-            return CommonResult.failed("用户名和密码不能相同哦");
-        }
-
-        //用户名是否已经被使用
-        if (userService.count(Wrappers.<User>lambdaQuery().eq(User::getUserName, userInfoDto.getUserName())) > 0) {
-            session.removeAttribute("circleCaptchaCode");
-            return CommonResult.failed("客官！该用户名已经存在哦");
-        }
-
-        User user = new User();
-        BeanUtils.copyProperties(userInfoDto, user);
-        user.setUserId(IdUtil.simpleUUID());
-        user.setUserRegisterTime(DateUtil.date());
-        user.setUserPassword(SecureUtil.md5(user.getUserId() + user.getUserPassword()));
-        user.setUserStatus(1);
-        user.setUserPublishable(1);
-        if (userService.save(user)) {
-            return CommonResult.success("注册成功");
-        }
-
-        return CommonResult.failed("哎呀！注册失败啦，刷新页面再试一次哦~");
+    public CompletionStage<CommonResult> userRegister(HttpServletRequest request, UserInfoDto userInfoDto) {
+       return userService.userRegist(request,userInfoDto);
     }
 
 
@@ -167,36 +139,8 @@ public class ViewController {
      */
     @PostMapping("/userLogin")
     @ResponseBody
-    public CommonResult userLogin(HttpServletRequest request, UserInfoDto userInfoDto) {
-        HttpSession session = request.getSession();
-        String verifyCode = userInfoDto.getVerifyCode();
-        if (StrUtil.isBlank(verifyCode) || !verifyCode.equals(session.getAttribute("circleCaptchaCode"))) {
-            session.removeAttribute("circleCaptchaCode");
-            return CommonResult.failed("验证码不正确");
-        }
-        //用户名和密码是否相同
-        if (userInfoDto.getUserName().equals(userInfoDto.getUserPassword())) {
-            session.removeAttribute("circleCaptchaCode");
-            return CommonResult.failed("用户名和密码不能相同哦");
-        }
-
-        //获取用户
-        User userDb = userService.getOne(Wrappers.<User>lambdaQuery().eq(User::getUserName, userInfoDto.getUserName()), false);
-        if (Objects.isNull(userDb)) {
-            session.removeAttribute("circleCaptchaCode");
-            return CommonResult.failed("用户名错误");
-        }
-        if (Objects.nonNull(userDb.getUserStatus()) && userDb.getUserStatus() == 0) {
-            session.removeAttribute("circleCaptchaCode");
-            return CommonResult.failed("您的账户已经被冻结，暂无法登录，请联系管理员");
-        }
-
-        if (!SecureUtil.md5(userDb.getUserId() + userInfoDto.getUserPassword()).equals(userDb.getUserPassword())) {
-            session.removeAttribute("circleCaptchaCode");
-            return CommonResult.failed("密码错误");
-        }
-        session.setAttribute("user", userDb);
-        return CommonResult.success("登录成功");
+    public CompletionStage<CommonResult> userLogin(HttpServletRequest request, UserInfoDto userInfoDto) {
+        return userService.userLogin(request,userInfoDto);
     }
 
     /**
@@ -323,31 +267,8 @@ public class ViewController {
      */
     @PostMapping("/comment/list")
     @ResponseBody
-    public CommonResult commentList(HttpServletRequest request, String articleId, Integer pageNumber) {
-        if (StrUtil.isBlank(articleId)) {
-            return CommonResult.failed("程序出现错误，请刷新页面重试");
-        }
-        if (Objects.isNull(pageNumber) || pageNumber < 1) {
-            pageNumber = 1;
-        }
-        Page<CommentVo> commentVoPage = new Page<>(pageNumber, 5);
-        IPage<CommentVo> commentVoIPage = commentService.getArticleCommentList(commentVoPage, articleId);
-        commentVoIPage.getRecords().stream().forEach(commentVo -> {
-            commentVo.setUserName(CommonUtils.getHideMiddleStr(commentVo.getUserName()));
-        });
-
-        //已经点过赞的评论
-        HashMap<String, Long> goodCommentMap = (HashMap<String, Long>) request.getSession().getAttribute("goodCommentMap");
-        if (CollUtil.isNotEmpty(goodCommentMap)) {
-            List<String> commentIds = goodCommentMap.keySet().stream().collect(Collectors.toList());
-            commentVoIPage.getRecords().stream().forEach(commentVo -> {
-                if (commentIds.contains(commentVo.getCommentId())) {
-                    commentVo.setIsGoodComment(1);
-                }
-            });
-        }
-
-        return CommonResult.success(CommonPage.restPage(commentVoIPage));
+    public CompletionStage<CommonResult> commentList(HttpServletRequest request, String articleId, Integer pageNumber) {
+       return commentService.commentList(request,articleId,pageNumber);
     }
 
 
@@ -381,22 +302,8 @@ public class ViewController {
      */
     @PostMapping("/articleGood")
     @ResponseBody
-    public CommonResult articleGood(HttpServletRequest request, String articleId) {
-        HttpSession session = request.getSession();
-        if (Objects.nonNull(session.getAttribute("articleGoodTime"))) {
-            return CommonResult.failed("客官！您已经点过啦");
-        }
-
-        Article article = articleService.getById(articleId);
-        Integer articleGoodNumber = article.getArticleWatchTimes();
-        ++articleGoodNumber;
-        article.setArticleWatchTimes(articleGoodNumber);
-        if (articleService.updateById(article)) {
-            session.setAttribute("articleGoodTime", true);
-            return CommonResult.success("点赞成功！");
-        }
-
-        return CommonResult.failed("点赞失败");
+    public CompletionStage<CommonResult> articleGood(HttpServletRequest request, String articleId) {
+        return articleService.articleGoodIncrease(request,articleId);
     }
 
 
@@ -496,39 +403,8 @@ public class ViewController {
      */
     @PostMapping("/goodComment")
     @ResponseBody
-    public CommonResult goodComment(HttpServletRequest request, String commentId) {
-        HttpSession session = request.getSession();
-
-
-        if (StrUtil.isBlank(commentId)) {
-            return CommonResult.failed("未获取到需要的数据，请刷新页面重试");
-        }
-
-        //一个小时只能给一个评论点赞
-        HashMap<String, Long> goodCommentMap = (HashMap<String, Long>) session.getAttribute("goodCommentMap");
-        if (CollUtil.isEmpty(goodCommentMap)) {
-            goodCommentMap = new HashMap<>();
-        } else {
-            if (Objects.nonNull(goodCommentMap.get(commentId))) {
-                Long goodCommentTime = goodCommentMap.get(commentId);
-                if ((goodCommentTime + 3600) >= DateUtil.currentSeconds()) {
-                    return CommonResult.failed("客官，这个评论您已经点过赞了哦");
-                }
-            }
-        }
-
-        Comment comment = commentService.getById(commentId);
-        if (Objects.isNull(comment)) {
-            return CommonResult.failed("点赞失败，未获取到需要的数据，请刷新页面重试");
-        }
-        Integer commentGoodNumber = comment.getCommentGoodNumber();
-        ++commentGoodNumber;
-        if (commentService.updateById(comment.setCommentGoodNumber(commentGoodNumber))) {
-            goodCommentMap.put(commentId, DateUtil.currentSeconds());
-            session.setAttribute("goodCommentMap", goodCommentMap);
-            return CommonResult.success("点赞成功");
-        }
-        return CommonResult.failed("点赞失败");
+    public CompletionStage<CommonResult> goodComment(HttpServletRequest request, String commentId) {
+        return commentService.goodComment(request,commentId);
     }
 
 }
