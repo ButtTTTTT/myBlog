@@ -69,7 +69,7 @@ logging:
   level:
     root: info #日志配置DEBUG,INFO,WARN,ERRO
   file:
-    name: D:/logs/myBlog.log   # 日志文件的路径和名称
+    name: D:/logs/myBlog.log   # 日志文件的路径和名称  windows 路径 D:/logs/myBlog.log    linux 路径 /dir/xxx.log
     max-history: 30   # 保留的日志文件最大数量，超过这个数量，会从最旧的文件开始删除
     max-size: 10MB   # 单个日志文件的最大大小，超过这个大小会创建新的日志文件
     total-size-cap: 500MB   # 所有日志文件的总大小限制，超过这个大小，会从最旧的文件开始删除
