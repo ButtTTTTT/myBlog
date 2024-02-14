@@ -13,11 +13,16 @@ public class UserInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
         HttpSession session = request.getSession();
-        if(Objects.isNull(session.getAttribute("user"))){
+        /**
+         * 用户免登录
+         */
+        if (Objects.isNull(session.getAttribute("user"))) {
             response.sendRedirect("/login");
             return false;
         }
+
         return true;
     }
 }

@@ -23,6 +23,15 @@
 <!--            <artifactId>mssql-jdbc</artifactId>-->
 <!--            <version>9.4.1.jre8</version>-->
 <!--        </dependency>-->
+        <!--Swagger 依赖-->
+
+
+<!--        swagger ui -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-boot-starter</artifactId>
+            <version>3.0.0</version>
+        </dependency>
 
 
         <dependency>

@@ -20,7 +20,7 @@ server:
   servlet:
     session:
       #Session超时时间设置为2小时，单位是秒，默认是30分钟
-      timeout: 12000
+      timeout: 1800
 spring:
   #静态文件地址
   resources:
@@ -35,7 +35,7 @@ spring:
     password: root
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-#模板插件
+  #模板插件
   freemarker:
     # 设置模板后缀名
     suffix: .ftl

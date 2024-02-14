@@ -41,7 +41,6 @@ import java.util.stream.Collectors;
 
 @Controller
 public class ViewController {
-
     @Autowired
     private IUserService userService;
     @Autowired
@@ -161,9 +160,7 @@ public class ViewController {
      * @return
      */
     @GetMapping("/")
-    public String index(HttpServletRequest request, Model model) {
-
-
+    public String index() {
         return "/view/index";
     }
 
@@ -353,7 +350,7 @@ public class ViewController {
             }
         }
         //查询到的文章列表
-        List<Article> articleList = new ArrayList<>();
+//        List<Article> articleList = new ArrayList<>();
 
         //拆分搜索词,查询标签
         List<Word> words = WordSegmenter.seg(articleTitle);

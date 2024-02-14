@@ -11,7 +11,7 @@
                 <span class="icon-bar"></span>
             </button>
             <!-- 品牌名称或logo -->
-            <a class="navbar-brand" href="/unknn/index" target="_blank"><i class="icon-home"></i> 首页</a>
+            <a class="navbar-brand" href="/" target="_blank"><i class="icon-home"></i> 首页</a>
         </div>
         <!-- 导航项目 -->
         <div class="collapse navbar-collapse navbar-collapse-example">
@@ -45,6 +45,12 @@
                         <li><a href="/unknn/link/list">友链列表</a></li>
                     </ul>
                 </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">轮播图管理<b class="caret"></b></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="/unknn/carousel/list">首页轮播图</a></li>
+                    </ul>
+                </li>
             </ul>
             <!-- 右侧的导航项目 -->
             <ul class="nav navbar-nav navbar-right">
@@ -52,7 +58,8 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-th-list"></i> 系统<b
                                 class="caret"></b></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="javascript:void(0)" data-toggle="modal" data-target="#updatePasswordModal"> <i class="icon-edit"></i> 修改密码</a></li>
+                        <li><a href="javascript:void(0)" data-toggle="modal" data-target="#updatePasswordModal"> <i
+                                        class="icon-edit"></i> 修改密码</a></li>
                         <li><a href="/unknn/logout"><i class="icon-signout"></i> 退出登陆</a></li>
                     </ul>
                 </li>
@@ -64,7 +71,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
+                            class="sr-only">关闭</span></button>
                 <h4 class="modal-title">修改管理员密码</h4>
             </div>
             <div class="modal-body">
@@ -72,7 +80,8 @@
                     <div class="form-group">
                         <label for="newPassword" class="col-sm-2">新密码</label>
                         <div class="col-md-6 col-sm-10">
-                            <input type="text" class="form-control" name="newPassword" id="newPassword" placeholder="新密码">
+                            <input type="text" class="form-control" name="newPassword" id="newPassword"
+                                   placeholder="新密码">
                         </div>
                     </div>
                 </form>

@@ -1,4 +1,5 @@
 package top.lhit.myBlog.module.controller;
+
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.system.SystemUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -22,6 +23,7 @@ import top.lhit.myBlog.module.entity.*;
 import top.lhit.myBlog.module.service.*;
 import top.lhit.myBlog.module.vo.AdVo;
 import top.lhit.myBlog.module.vo.ArticleVo;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -48,11 +50,12 @@ public class ManageController {
     @Autowired
     private IArticleTypeService iArticleTypeService;
     @Autowired
-    private ISystemService systemService;
-    @Autowired
     private IArticleTagService articleTagService;
     @Autowired
     private IArticleService articleService;
+    @Autowired
+    private ICarouselService carouselService;
+
     /**
      * 登录页面
      *
@@ -78,11 +81,12 @@ public class ManageController {
     @PostMapping("/unknn/unknnLogin")
     @ResponseBody
     public CompletionStage<CommonResult> unknnLogin(HttpServletRequest request,
-                                   String unknnName,
-                                   String unknnPassword,
-                                   String verifyCode) {
-       return unknnService.confirmUnknn(request,unknnName,unknnPassword,verifyCode);
+                                                    String unknnName,
+                                                    String unknnPassword,
+                                                    String verifyCode) {
+        return unknnService.confirmUnknn(request, unknnName, unknnPassword, verifyCode);
     }
+
     /**
      * 管理员退出登录
      *
@@ -247,13 +251,21 @@ public class ManageController {
      */
     @GetMapping("/unknn/article/list")
     public String articleList(Model model, @Valid ArticlePageDto articlePageDto) {
+
         IPage<ArticleVo> articleVoPage = new Page<>(articlePageDto.getPageNumber(), 24);
+
         IPage<ArticleVo> articleVoIPage = articleService.articleList(articleVoPage, articlePageDto.getArticleTitle(), null);
+
         model.addAttribute("articleVoIPage", CommonPage.restPage(articleVoIPage));
+
         if (StrUtil.isNotBlank(articlePageDto.getArticleTitle())) {
+
             model.addAttribute("articleTitle", articlePageDto.getArticleTitle());
+
         }
+
         return "/unknn/article/articleList";
+
     }
 
     /**
@@ -265,9 +277,8 @@ public class ManageController {
     @PostMapping("/unknn/article/hot")
     @ResponseBody
     public CompletionStage<CommonResult> articleHot(String articleId) {
-      return articleService.setArticleHot(articleId);
+        return articleService.setArticleHot(articleId);
     }
-
 
 
     @PostMapping("/unknn/article/del")
@@ -286,6 +297,12 @@ public class ManageController {
     public String linkList(Model model) {
         model.addAttribute("linkList", linkService.list(Wrappers.<FriendLink>lambdaQuery().orderByAsc(FriendLink::getLinkSort)));
         return "/unknn/linkList";
+    }
+
+    @GetMapping("/unknn/carousel/list")
+    public String carouselList(Model model) {
+        model.addAttribute("carouselList", carouselService.list(Wrappers.<Carousel>lambdaQuery().orderByAsc(Carousel::getCarouselSort)));
+        return "/unknn/carouselList";
     }
 
     /**
@@ -337,7 +354,7 @@ public class ManageController {
     @PostMapping("/unknn/ad/type/addOrUpdate")
     @ResponseBody
     public CompletionStage<CommonResult> adTypeDML(AdType adType) {
-        return adTypeService.adTypeUpdate(adType) ;
+        return adTypeService.adTypeUpdate(adType);
     }
 
     /**
@@ -348,9 +365,10 @@ public class ManageController {
      */
     @PostMapping("/unknn/ad/addOrUpdate")
     @ResponseBody
-    public CompletionStage<CommonResult> adAddOrUpdate(AdDto adDto, MultipartFile file){
-            return adService.adDml(adDto,file);
+    public CompletionStage<CommonResult> adAddOrUpdate(AdDto adDto, MultipartFile file) {
+        return adService.adDml(adDto, file);
     }
+
     /**
      * 删除广告
      *
@@ -362,6 +380,7 @@ public class ManageController {
     public CompletionStage<CommonResult> adDel(String adId) {
         return adService.adDel(adId);
     }
+
     /**
      * 修改unknn密码
      *
@@ -371,6 +390,54 @@ public class ManageController {
     @PostMapping("/unknn/password/update")
     @ResponseBody
     public CompletionStage<CommonResult> passwordUpdate(HttpServletRequest request, String newPassword) {
-       return unknnService.updatePassword(request,newPassword);
+        return unknnService.updatePassword(request, newPassword);
     }
+
+    /**
+     * 轮播图删除
+     *
+     * @param carouselId
+     * @return
+     */
+    @PostMapping("/unknn/carousel/del")
+    @ResponseBody
+    public CompletionStage<CommonResult> delCarousel(String carouselId) {
+
+        log.info("/unknn/carousel/del : post  ");
+
+        return carouselService.delCarousel(carouselId);
+
+    }
+
+    /**
+     * 修改或删除Carousel
+     *
+     * @param carousel
+     * @return
+     */
+    @PostMapping("/unknn/carousel/addOrUpdate")
+    @ResponseBody
+    public CompletionStage<CommonResult> addOrUpdateCarousel(Carousel carousel) {
+
+        log.info("/unknn/carousel/addOrUpdate : post   -> ");
+
+        return carouselService.addOrUpdateCarousel(carousel);
+
+    }
+
+    /**
+     * 禁用轮播图
+     * @param carouselId
+     * @return
+     */
+    @PostMapping("/unknn/carousel/ban")
+    @ResponseBody
+    public CompletionStage<CommonResult> banCarousel(String carouselId) {
+
+        log.info("/unknn/carousel/ban : post   -> ");
+
+        return carouselService.banCarousel(carouselId);
+
+    }
+
 }

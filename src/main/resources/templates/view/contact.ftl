@@ -7,8 +7,8 @@
             联系我们：
         </div>
         <div class="panel-body" style="text-align: center;">
-           <h4> <i class="icon-wechat"></i> 微信：19113548085&emsp;&emsp;&emsp;&nbsp;&nbsp;</h4>
-           <h4> <i class="icon-envelope"></i> 邮箱：546259649@qq.com</h4>
+<#--           <h4> <i class="icon-wechat"></h4>-->
+<#--           <h4> <i class="icon-envelope"></h4>-->
         </div>
     </div>
 </div>

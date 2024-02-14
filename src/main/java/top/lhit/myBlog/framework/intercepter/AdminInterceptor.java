@@ -14,6 +14,9 @@ public class AdminInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession();
+        /**
+         * 管理员免登录
+         */
         if(Objects.isNull(session.getAttribute("unknn"))){
             response.sendRedirect("/unknn/login");
             return false;

@@ -1,0 +1,42 @@
+[
+  {
+    "carouselSlideTo": 2,
+    "carouselId": "3",
+    "carouseImageUrl": "http://example.com/image3.jpg",
+    "carouseSort": 3,
+    "carouselTarget": "位置3",
+    "carouseContent": "Content 3",
+    "carouselIsActive": 1,
+    "carouseTitle": "Title 3"
+  },
+  {
+    "carouselSlideTo": 3,
+    "carouselId": "4",
+    "carouseImageUrl": "http://example.com/image4.jpg",
+    "carouseSort": 4,
+    "carouselTarget": "位置4",
+    "carouseContent": "Content 4",
+    "carouselIsActive": 1,
+    "carouseTitle": "Title 4"
+  },
+  {
+    "carouselSlideTo": 1,
+    "carouselId": "2",
+    "carouseImageUrl": "http://example.com/image2.jpg",
+    "carouseSort": 222,
+    "carouselTarget": "位置2",
+    "carouseContent": "Content 2",
+    "carouselIsActive": 1,
+    "carouseTitle": "Title 2"
+  },
+  {
+    "carouselSlideTo": 0,
+    "carouselId": "1",
+    "carouseImageUrl": "http://example.com/image1.jpg",
+    "carouseSort": 1111,
+    "carouselTarget": "位置1",
+    "carouseContent": "Content 1",
+    "carouselIsActive": 1,
+    "carouseTitle": "Title 1"
+  }
+]

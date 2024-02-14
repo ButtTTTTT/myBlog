@@ -1,4 +1,5 @@
 package top.lhit.myBlog.framework.intercepter;
+
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
@@ -11,12 +12,14 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import top.lhit.myBlog.module.entity.*;
 import top.lhit.myBlog.module.service.*;
 import top.lhit.myBlog.module.vo.ArticleTypeTreeVo;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
 @Slf4j
 @Component
 @SuppressWarnings("unchecked")
@@ -79,21 +82,30 @@ public class GlobalIntercepter implements HandlerInterceptor {
             servletContext.setAttribute("articleTypeList", articleTypeList);
         }
 
-        //热门文章
-        List<Article> articleHotList = (List<Article>) servletContext.getAttribute("articleHotList");
-        if (CollUtil.isEmpty(articleHotList)) {
-            articleHotList = articleService.list(Wrappers.<Article>lambdaQuery().eq(Article::getArticleHot, 1).select(Article::getArticleId, Article::getArticleTitle, Article::getArticleAddTime).last(" limit 5"));
-            servletContext.setAttribute("articleHotList", articleHotList);
-        }
+        /**
+         * 热门文章处理
+         * 暂时不用
+         */
+//        List<Article> articleHotList = (List<Article>) servletContext.getAttribute("articleHotList");
+//        if (CollUtil.isEmpty(articleHotList)) {
+//            articleHotList = articleService.list(Wrappers.<Article>lambdaQuery().eq(Article::getArticleHot, 1).select(Article::getArticleId, Article::getArticleTitle, Article::getArticleAddTime).last(" limit 5"));
+//            servletContext.setAttribute("articleHotList", articleHotList);
+//        }
 
-        //热门标签
-        List<ArticleTag> articleTagList = (List<ArticleTag>) servletContext.getAttribute("articleTagList");
-        if (CollUtil.isEmpty(articleTagList)) {
-            articleTagList = articleTagService.list(Wrappers.<ArticleTag>lambdaQuery().select(ArticleTag::getArticleTagId, ArticleTag::getArticleTagName));
-            servletContext.setAttribute("articleTagList", articleTagList);
-        }
+        /**
+         * 热门标签处理
+         * 暂时不用
+         */
+//        List<ArticleTag> articleTagList = (List<ArticleTag>) servletContext.getAttribute("articleTagList");
+//        if (CollUtil.isEmpty(articleTagList)) {
+//            articleTagList = articleTagService.list(Wrappers.<ArticleTag>lambdaQuery().select(ArticleTag::getArticleTagId, ArticleTag::getArticleTagName));
+//            servletContext.setAttribute("articleTagList", articleTagList);
+//        }
 
         //广告
+        /**
+         * 广告业务 暂时不用
+         */
         List<Ad> adIndexList = (List<Ad>) servletContext.getAttribute("adIndexList");
         if (CollUtil.isEmpty(adIndexList)) {
             AdType homeAd = adTypeService.getOne(Wrappers.<AdType>lambdaQuery().eq(AdType::getAdTypeTag, "homeAd").select(AdType::getAdTypeId), false);
@@ -113,7 +125,7 @@ public class GlobalIntercepter implements HandlerInterceptor {
         List<FriendLink> FriendLinkList = (List<FriendLink>) servletContext.getAttribute("friendLinkList");
         if (CollUtil.isEmpty(FriendLinkList)) {
             FriendLinkList = friendLinkService.list(Wrappers.<FriendLink>lambdaQuery().orderByAsc(FriendLink::getLinkSort));
-            servletContext.setAttribute("FriendLinkList", FriendLinkList);
+            servletContext.setAttribute("linkList", FriendLinkList);
         }
 
         return true;

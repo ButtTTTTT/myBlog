@@ -16,6 +16,6 @@ public class FixedPrintTask {
         servletContext.removeAttribute("articleHotList");
         servletContext.removeAttribute("articleTagList");
         servletContext.removeAttribute("adIndexList");
-        servletContext.removeAttribute("linkList");
+        servletContext.removeAttribute("FriendLinkList");
     }
 }

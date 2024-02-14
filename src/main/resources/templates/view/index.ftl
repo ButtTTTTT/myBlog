@@ -1,5 +1,6 @@
 <#include "../import/top.ftl">
 <#include "../import/navbar.ftl">
+<#include "../import/carousel.ftl">
 <style>
     .col2Padding {
         padding-left: 2px;
@@ -14,51 +15,8 @@
         font-weight: bold;
     }
 </style>
-
 <div class="container">
-    <#--    轮播图 开始  -->
-    <div id="myNiceCarousel" class="carousel slide" data-ride="carousel">
-        <!-- 圆点指示器 -->
-        <ol class="carousel-indicators">
-            <li data-target="#myNiceCarousel" data-slide-to="0" class="active"></li>
-            <li data-target="#myNiceCarousel" data-slide-to="1"></li>
-            <li data-target="#myNiceCarousel" data-slide-to="2"></li>
-        </ol>
 
-        <!-- 轮播项目 -->
-        <div class="carousel-inner">
-            <div class="item active">
-                <img alt="First slide" src="http://openzui.com/docs/img/slide1.jpg">
-                <div class="carousel-caption">
-                    <h3>我是第一张幻灯片</h3>
-                    <p>:)</p>
-                </div>
-            </div>
-            <div class="item">
-                <img alt="Second slide" src="http://openzui.com/docs/img/slide2.jpg">
-                <div class="carousel-caption">
-                    <h3>我是第二张幻灯片</h3>
-                    <p>0.0</p>
-                </div>
-            </div>
-            <div class="item">
-                <img alt="Third slide" src="http://openzui.com/docs/img/slide3.jpg">
-                <div class="carousel-caption">
-                    <h3>我是第三张幻灯片</h3>
-                    <p>最后一张咯~</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- 项目切换按钮 -->
-        <a class="left carousel-control" href="#myNiceCarousel" data-slide="prev">
-            <span class="icon icon-chevron-left"></span>
-        </a>
-        <a class="right carousel-control" href="#myNiceCarousel" data-slide="next">
-            <span class="icon icon-chevron-right"></span>
-        </a>
-    </div>
-    <#--    轮播图 结束  -->
     <div class="col-xs-12  col-sm-9 col2Padding">
         <#--        广告开始  -->
         <#if adIndexList?? && adIndexList?size gt 0 >
@@ -110,8 +68,7 @@
                 <#if (articleType.articleList)?? && (articleType.articleList)?size gt 0>
                     <div class="panel">
                         <div class="panel-body">
-                            <h4 style="margin-top: 0px;"><i
-                                        class="icon-th-large"></i> ${(articleType.articleTypeName)!}</h4>
+                            <h4 style="margin-top: 0px;"><i class="icon-th-large"></i> ${(articleType.articleTypeName)!}</h4>
                             <#list (articleType.articleList) as indexArticle>
                                 <div class="col-xs-6 col-sm-4" style="padding: 2px;">
                                     <div class="card">
