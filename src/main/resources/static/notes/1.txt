@@ -1,8 +1,0 @@
- 前端页面文件：
-
- import 为视图层导入的中间代码 简称中间层
- view 为视图主页面
- error 为错误页面
- unknn 为后台页面
- user 为用户管理页面
- 使用<#include "../import/top.ftl"> 来导入部分代码

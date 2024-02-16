@@ -13,14 +13,5 @@ public class Generator {
     public static void main(String[] args) {
 
         SpringApplication.run(Generator.class, args);
-
-
-        String publickey = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJ23ID2Ao3BRDbwfVdQF/O6DaLQYugKEOz2EG8hKqrdlNNbrr2sSEnQ3nlr/YwA3sS+SIpuwlySDOuy3K3ozF+ECAwEAAQ==";
-        String password = "PUhXybNA/HI4dPWW/xael86xKRpgj/4y/sTOZQ4QVpdN1kcT7WCUfO2WlhlaDuABgHgazNiYVu/rPd0Xq/o7Zg==";
-        try {
-            log.info("password {}", ConfigTools.decrypt(publickey, password));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }

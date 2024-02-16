@@ -20,8 +20,11 @@ public class UserInterceptor implements HandlerInterceptor {
          * 用户免登录
          */
         if (Objects.isNull(session.getAttribute("user"))) {
+
             response.sendRedirect("/login");
+
             return false;
+
         }
 
         return true;
