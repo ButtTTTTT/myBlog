@@ -9,10 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.lhit.myBlog.common.utils.CommonPage;
 import top.lhit.myBlog.common.utils.CommonResult;
@@ -37,7 +34,7 @@ import java.util.stream.Collectors;
  * @create 2021/12/21 22:19
  */
 @Controller
-@RequestMapping("/user")
+@RequestMapping("/user")@CrossOrigin
 @Slf4j
 public class UserController {
     @Autowired

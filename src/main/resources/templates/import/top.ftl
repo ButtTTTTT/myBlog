@@ -11,7 +11,8 @@
     <meta name="description" content="记录生活和工作">
     <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="//cdn.bootcss.com/zui/1.10.0/css/zui.min.css">
+    <link rel="stylesheet" href="/css/zui.min.css">
+    <link rel="stylesheet" href="/css/zui.red.css">
     <link rel="stylesheet" href="/css/common.css">
     <script src="//cdn.bootcss.com/zui/1.10.0/lib/jquery/jquery.js"></script>
     <script src="//cdn.bootcss.com/zui/1.10.0/js/zui.min.js"></script>

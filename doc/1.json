@@ -1,42 +1,32 @@
 [
   {
-    "carouselSlideTo": 2,
-    "carouselId": "3",
-    "carouseImageUrl": "http://example.com/image3.jpg",
-    "carouseSort": 3,
-    "carouselTarget": "位置3",
-    "carouseContent": "Content 3",
-    "carouselIsActive": 1,
-    "carouseTitle": "Title 3"
-  },
-  {
-    "carouselSlideTo": 3,
-    "carouselId": "4",
-    "carouseImageUrl": "http://example.com/image4.jpg",
-    "carouseSort": 4,
-    "carouselTarget": "位置4",
-    "carouseContent": "Content 4",
-    "carouselIsActive": 1,
-    "carouseTitle": "Title 4"
-  },
-  {
-    "carouselSlideTo": 1,
-    "carouselId": "2",
-    "carouseImageUrl": "http://example.com/image2.jpg",
-    "carouseSort": 222,
-    "carouselTarget": "位置2",
-    "carouseContent": "Content 2",
-    "carouselIsActive": 1,
-    "carouseTitle": "Title 2"
-  },
-  {
-    "carouselSlideTo": 0,
     "carouselId": "1",
-    "carouseImageUrl": "http://example.com/image1.jpg",
-    "carouseSort": 1111,
-    "carouselTarget": "位置1",
-    "carouseContent": "Content 1",
+    "carouselTarget": "#indexCarousel",
     "carouselIsActive": 1,
-    "carouseTitle": "Title 1"
+    "carouselContent": "Content 1",
+    "carouselCreateTime": 1707904131000,
+    "carouselTitle": "Title 1",
+    "carouselImageUrl": "https://openzui.com/docs/img/slide1.jpg",
+    "carouselSort": 1
+  },
+  {
+    "carouselId": "2",
+    "carouselTarget": "#indexCarousel",
+    "carouselIsActive": 1,
+    "carouselContent": "Content 2",
+    "carouselCreateTime": 1707909825000,
+    "carouselTitle": "Title 2",
+    "carouselImageUrl": "https://openzui.com/docs/img/slide2.jpg",
+    "carouselSort": 2
+  },
+  {
+    "carouselId": "b5a2f1bfd0d84dbe8c919cfd0cfa62af",
+    "carouselTarget": "#indexCarousel",
+    "carouselIsActive": 1,
+    "carouselContent": "content3",
+    "carouselCreateTime": 1707910164000,
+    "carouselTitle": "title3",
+    "carouselImageUrl": "https://openzui.com/docs/img/slide3.jpg",
+    "carouselSort": 12
   }
 ]

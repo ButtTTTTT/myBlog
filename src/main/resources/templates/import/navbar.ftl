@@ -1,6 +1,6 @@
 <div style="margin-bottom: 2px;" class="col-xs-12">
     <div class="col-xs-6" style="padding-left: 2px;">
-        <h2 style="color: #0000ff;padding: 0;margin: 2px;">热情分享</h2>
+        <h2 style="color: #C74743;padding: 0;margin: 2px;">热情分享</h2>
         <small style="color: #808080;">&emsp;- 生活 工作 -</small>
     </div>
     <div class="col-xs-6">
@@ -11,7 +11,7 @@
 </div>
 
 </div>
-<nav class="navbar navbar-inverse" role="navigation" style="margin-bottom: 5px;">
+<nav class=" navbar mb navbar-inverse  " role="navigation">
     <div class="container-fluid">
         <div class="container">
             <div class="navbar-header">
@@ -68,42 +68,4 @@
         </div>
     </div>
 </nav>
-<#--&lt;#&ndash;   热门文章开始  &ndash;&gt;-->
-<#--<div style="float: right;margin-right: 100px" >-->
-<#--    <div class="col-xs-12  col-sm-3 col2Padding" style="width: 100%" >-->
-<#--        <div class="panel panel-primary">-->
-<#--            <div class="panel-heading">-->
-<#--                🔥 热门文章-->
-<#--            </div>-->
-<#--            <div class="panel-body">-->
-<#--                <ul class="list-group">-->
-<#--                    <#if articleHotList?? && articleHotList?size gt 0 >-->
-<#--                        <#list articleHotList as articleHot>-->
-<#--                            <li class="list-group-item">-->
-<#--                                <a style="text-decoration: none;"-->
-<#--                                   href="/article?articleId=${(articleHot.articleId)!}">${(articleHot.articleAddTime)?string("yyyy-MM-dd")}-->
-<#--                                    ：${(articleHot.articleTitle)!}</a>-->
-<#--                            </li>-->
-<#--                        </#list>-->
-<#--                    </#if>-->
-<#--                </ul>-->
-<#--            </div>-->
-<#--        </div>-->
-<#--&lt;#&ndash;        标签列表&ndash;&gt;-->
-<#--        <div class="panel panel-primary"style="width: 100%">-->
-<#--            <div class="panel-heading">-->
-<#--                标签-->
-<#--            </div>-->
-<#--            <div class="panel-body" id="articleTagListBox">-->
-<#--                <#if articleTagList?? && articleTagList?size gt 0 >-->
-<#--                    <#list articleTagList as articleTag>-->
-<#--                        <span class="label label-badge"><a class="articleTagStyle" style="text-decoration: none;"-->
-<#--                                                           href="/tag/article/list?articleTagId=${(articleTag.articleTagId)!}">${(articleTag.articleTagName)!}</a></span>-->
-<#--                    </#list>-->
-<#--                </#if>-->
-<#--            </div>-->
-<#--        </div>-->
-<#--&lt;#&ndash;        标签列表结束&ndash;&gt;-->
-    </div>
-</div>
 <div class="container">

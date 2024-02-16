@@ -1,4 +1,6 @@
 package top.lhit.myBlog.module.controller;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import top.lhit.myBlog.common.utils.*;
 import cn.hutool.captcha.CircleCaptcha;
 import cn.hutool.core.collection.CollUtil;
@@ -39,7 +41,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
-@Controller
+@Controller@Slf4j@CrossOrigin
 public class ViewController {
     @Autowired
     private IUserService userService;
@@ -139,6 +141,8 @@ public class ViewController {
     @PostMapping("/userLogin")
     @ResponseBody
     public CompletionStage<CommonResult> userLogin(HttpServletRequest request, UserInfoDto userInfoDto) {
+
+        log.info("/userLogin : post =======>  {}  ",userInfoDto);
         return userService.userLogin(request,userInfoDto);
     }
 

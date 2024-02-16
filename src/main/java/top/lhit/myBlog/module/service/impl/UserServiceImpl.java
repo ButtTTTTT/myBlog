@@ -1,4 +1,5 @@
 package top.lhit.myBlog.module.service.impl;
+
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -17,9 +18,11 @@ import top.lhit.myBlog.module.dto.user.UserDto;
 import top.lhit.myBlog.module.dto.user.UserInfoDto;
 import top.lhit.myBlog.module.dto.user.UserListPageDto;
 import top.lhit.myBlog.module.entity.Article;
+import top.lhit.myBlog.module.entity.Unknn;
 import top.lhit.myBlog.module.entity.User;
 import top.lhit.myBlog.module.mapper.UserMapper;
 import top.lhit.myBlog.module.service.IArticleService;
+import top.lhit.myBlog.module.service.IUnknnService;
 import top.lhit.myBlog.module.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
@@ -29,6 +32,7 @@ import javax.servlet.http.HttpSession;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+
 /**
  * <p>
  * 服务实现类
@@ -45,6 +49,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Autowired
     private IArticleService iArticleService;
+
+    @Autowired
+    private IUnknnService unknnService;
 
     @Override
     public CompletionStage<CommonResult> postUserBan(String userId) {
@@ -64,6 +71,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             }
         });
     }
+
     @Override
     public CompletionStage<CommonResult> postUserUpdate(UserDto userDto) {
         return CompletableFuture.supplyAsync(() -> {
@@ -105,7 +113,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public CompletionStage<String> getUserList(UserListPageDto userListPageDto, Model model) {
-        return CompletableFuture.supplyAsync(()->{
+        return CompletableFuture.supplyAsync(() -> {
             /**
              *获取前端发送的参数
              */
@@ -144,7 +152,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public CompletionStage<CommonResult> userRegist(HttpServletRequest request, UserInfoDto userInfoDto) {
-        return CompletableFuture.supplyAsync(()->{
+        return CompletableFuture.supplyAsync(() -> {
             HttpSession session = request.getSession();
             String verifyCode = userInfoDto.getVerifyCode();
             if (StrUtil.isBlank(verifyCode) || !verifyCode.equals(session.getAttribute("circleCaptchaCode"))) {
@@ -180,36 +188,67 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public CompletionStage<CommonResult> userLogin(HttpServletRequest request, UserInfoDto userInfoDto) {
-        return CompletableFuture.supplyAsync(()->{
-            HttpSession session = request.getSession();
+        return CompletableFuture.supplyAsync(() -> {
+
+            /**
+             * 验证是否是管理员账号：
+             * 1、获取用户用户名
+             * 2、获取管理员用户名 查找是否匹配
+             * 3、验证密码 是否和该管理员匹配
+             * 4、正确 重定向到管理页面 不正确 再判断 是否匹配普通用户 匹配重定向到普通用户
+             */
+
+            String userName = userInfoDto.getUserName();
+
+            String userPassword = userInfoDto.getUserPassword();
+
             String verifyCode = userInfoDto.getVerifyCode();
-            if (StrUtil.isBlank(verifyCode) || !verifyCode.equals(session.getAttribute("circleCaptchaCode"))) {
-                session.removeAttribute("circleCaptchaCode");
-                return CommonResult.failed("验证码不正确");
-            }
-            //用户名和密码是否相同
-            if (userInfoDto.getUserName().equals(userInfoDto.getUserPassword())) {
-                session.removeAttribute("circleCaptchaCode");
-                return CommonResult.failed("用户名和密码不能相同哦");
-            }
 
-            //获取用户
-            User userDb = userService.getOne(Wrappers.<User>lambdaQuery().eq(User::getUserName, userInfoDto.getUserName()), false);
-            if (Objects.isNull(userDb)) {
-                session.removeAttribute("circleCaptchaCode");
-                return CommonResult.failed("用户名错误");
-            }
-            if (Objects.nonNull(userDb.getUserStatus()) && userDb.getUserStatus() == 0) {
-                session.removeAttribute("circleCaptchaCode");
-                return CommonResult.failed("您的账户已经被冻结，暂无法登录，请联系管理员");
-            }
+            boolean flag = unknnService
+                    .list()
+                    .stream()
+                    .map(Unknn::getUnknnName)
+                    .anyMatch(u -> u.equals(userName));
 
-            if (!SecureUtil.md5(userDb.getUserId() + userInfoDto.getUserPassword()).equals(userDb.getUserPassword())) {
-                session.removeAttribute("circleCaptchaCode");
-                return CommonResult.failed("密码错误");
+            HttpSession session = request.getSession();
+
+            if (flag) {
+                /**
+                 * 执行管理员登陆逻辑
+                 */
+
+            } else {
+
+                if (StrUtil.isBlank(verifyCode) || !verifyCode.equals(session.getAttribute("circleCaptchaCode"))) {
+                    session.removeAttribute("circleCaptchaCode");
+                    return CommonResult.failed("验证码不正确");
+                }
+
+                //用户名和密码是否相同
+                if (userInfoDto.getUserName().equals(userInfoDto.getUserPassword())) {
+                    session.removeAttribute("circleCaptchaCode");
+                    return CommonResult.failed("用户名和密码不能相同哦");
+                }
+
+                //获取用户
+                User userDb = userService.getOne(Wrappers.<User>lambdaQuery().eq(User::getUserName, userInfoDto.getUserName()), false);
+                if (Objects.isNull(userDb)) {
+                    session.removeAttribute("circleCaptchaCode");
+                    return CommonResult.failed("用户名错误");
+                }
+                if (Objects.nonNull(userDb.getUserStatus()) && userDb.getUserStatus() == 0) {
+                    session.removeAttribute("circleCaptchaCode");
+                    return CommonResult.failed("您的账户已经被冻结，暂无法登录，请联系管理员");
+                }
+
+                if (!SecureUtil.md5(userDb.getUserId() + userInfoDto.getUserPassword()).equals(userDb.getUserPassword())) {
+                    session.removeAttribute("circleCaptchaCode");
+                    return CommonResult.failed("密码错误");
+                }
+                session.setAttribute("user", userDb);
+                return CommonResult.success("登录成功");
             }
-            session.setAttribute("user", userDb);
-            return CommonResult.success("登录成功");
+            return CommonResult.failed("错误Error");
         });
     }
 }

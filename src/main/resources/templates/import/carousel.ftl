@@ -1,3 +1,4 @@
+<div class="pl">
 <#--    轮播图 开始  -->
 <div id="indexCarousel" class="carousel slide" data-ride="carousel">
     <!-- 圆点指示器 -->
@@ -15,9 +16,11 @@
         <span class="icon icon-chevron-right"></span>
     </a>
 </div>
+</div>
 <#--    轮播图 结束  -->
 <script>
     var res = [];
+
     function getCarousel() {
         return $.ajax({
             url: baseUrl + '/carousel/list',
@@ -30,9 +33,8 @@
         var carouselItem = '';
         var carouselIndicators = '';
         for (var i = 0; i < data.length; i++) {
-            console.log(i)
             //carousel-indicators 开始
-            carouselIndicators += '<li data-target="' + data[i].carouselTarget + '" data-slide-to="' + i + '" class="' + (i === 0 ? 'active' : '') + '"></li>';
+            carouselIndicators += '<li data-target="'+data[i].carouselTarget+'"data-slide-to="'+i+'" class="' + (i === 0 ? 'active' : '') + '"></li>';
 
             //carouselItem 开始
             carouselItem += '<div class="item' + (i === 0 ? ' active' : '') + '">';
@@ -56,7 +58,7 @@
 
     getCarousel().done(function initRes(data) {
         res = data.data;
-        console.log(res);
         initCarousel(res)
     });
+
 </script>

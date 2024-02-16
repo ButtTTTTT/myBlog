@@ -1,23 +1,9 @@
 <#include "../import/top.ftl">
 <#include "../import/navbar.ftl">
 <#include "../import/carousel.ftl">
-<style>
-    .col2Padding {
-        padding-left: 2px;
-        padding-right: 2px;
-    }
+<div class="container plzero">
+    <div class="col-xs-12  col-sm-9">
 
-    .articleTagStyle {
-        color: #ffffff;
-    }
-
-    .articleTagStyle:hover {
-        font-weight: bold;
-    }
-</style>
-<div class="container">
-
-    <div class="col-xs-12  col-sm-9 col2Padding">
         <#--        广告开始  -->
         <#if adIndexList?? && adIndexList?size gt 0 >
             <div class="img-thumbnail" style="margin-bottom: 10px;">
@@ -68,7 +54,8 @@
                 <#if (articleType.articleList)?? && (articleType.articleList)?size gt 0>
                     <div class="panel">
                         <div class="panel-body">
-                            <h4 style="margin-top: 0px;"><i class="icon-th-large"></i> ${(articleType.articleTypeName)!}</h4>
+                            <h4 style="margin-top: 0px;"><i class="icon-th-large"></i> ${(articleType.articleTypeName)!}
+                            </h4>
                             <#list (articleType.articleList) as indexArticle>
                                 <div class="col-xs-6 col-sm-4" style="padding: 2px;">
                                     <div class="card">
@@ -105,11 +92,43 @@
         </#if>
     </div>
     <#--        遍历文章结束 -->
+    <div class="col-xs-12  col-sm-3 col2Padding" style="margin-top: 10px">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                🔥 热门文章
+            </div>
+            <div class="panel-body">
+                <ul class="list-group">
+                    <#if articleHotList?? && articleHotList?size gt 0 >
+                        <#list articleHotList as articleHot>
+                            <li class="list-group-item">
+                                <a style="text-decoration: none;"
+                                   href="/article?articleId=${(articleHot.articleId)!}">${(articleHot.articleAddTime)?string("yyyy-MM-dd")}
+                                    ：${(articleHot.articleTitle)!}</a>
+                            </li>
+                        </#list>
+                    </#if>
+                </ul>
+            </div>
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                标签
+            </div>
+            <div class="panel-body" id="articleTagListBox">
+                <#if articleTagList?? && articleTagList?size gt 0 >
+                    <#list articleTagList as articleTag>
+                        <span class="label label-badge"><a class="articleTagStyle" style=" text-decoration: none; color: #ffffff"
+                                                           href="/tag/article/list?articleTagId=${(articleTag.articleTagId)!}">${(articleTag.articleTagName)!}</a></span>
+                    </#list>
+                </#if>
+            </div>
+        </div>
+
+    </div>
 </div>
-
-
 <script>
-
     $(function () {
         let labelClassList = ["label-badge", "label-primary", "label-success", "label-info", "label-warning", "label-danger"];
         let articleTags = $("#articleTagListBox span");
@@ -117,7 +136,6 @@
             $(articleTags[i]).addClass(labelClassList[Math.floor(Math.random() * labelClassList.length)]);
         }
     })
-
 </script>
 
 <#include "../import/viewBottom.ftl">

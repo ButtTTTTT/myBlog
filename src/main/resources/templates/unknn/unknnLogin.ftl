@@ -1,5 +1,6 @@
 <#include "../import/top.ftl">
-<div class="container">
+<#include "../import/navbar.ftl">
+<div class="container" style="margin-top: 50px">
     <div class="panel panel-primary">
         <div class="panel-heading">管理员登录</div>
         <div class="panel-body" style="height: 380px;">

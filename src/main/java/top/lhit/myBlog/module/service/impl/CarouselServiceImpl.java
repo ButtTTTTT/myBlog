@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 public class CarouselServiceImpl extends ServiceImpl<CarouselMapper, Carousel> implements ICarouselService {
     @Autowired
     private ICarouselService carouselService;
+
     @Override
     public CompletionStage<CommonResult<List<Carousel>>> listCarousel() {
 
@@ -52,6 +53,7 @@ public class CarouselServiceImpl extends ServiceImpl<CarouselMapper, Carousel> i
 
     @Override
     public CompletionStage<CommonResult> delCarousel(String carouselId) {
+
         return CompletableFuture.supplyAsync(() -> {
 
             if (carouselService.removeById(carouselId)) {
@@ -79,6 +81,9 @@ public class CarouselServiceImpl extends ServiceImpl<CarouselMapper, Carousel> i
             if (ObjectUtil.isNotNull(carousel)) {
 
                 if (ObjectUtil.isNull(carouselService.getById(carousel.getCarouselId()))) {
+
+                    //拼接#用于target调用id
+                    carousel.setCarouselTarget("#" + carousel.getCarouselTarget());
 
                     if (carouselService.save(carousel)) {
 
@@ -116,24 +121,21 @@ public class CarouselServiceImpl extends ServiceImpl<CarouselMapper, Carousel> i
 
             Carousel carousel = carouselService.getById(carouselId);
 
-            if (ObjectUtil.isNotNull(carousel)){
+            if (ObjectUtil.isNotNull(carousel)) {
 
                 carousel.setCarouselIsActive(0);
 
-                if (carouselService.updateById(carousel)){
-
+                if (carouselService.updateById(carousel)) {
 
                     log.info("ICarouselService.banCarousel: -> {}", CommonResult.success("禁用成功"));
 
                     return CommonResult.success("禁用成功");
-
 
                 }
 
                 log.info("ICarouselService.banCarousel: -> {}", CommonResult.success("失败"));
 
                 return CommonResult.success("失败");
-
 
             }
 

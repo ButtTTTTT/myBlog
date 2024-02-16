@@ -84,23 +84,21 @@ public class GlobalIntercepter implements HandlerInterceptor {
 
         /**
          * 热门文章处理
-         * 暂时不用
          */
-//        List<Article> articleHotList = (List<Article>) servletContext.getAttribute("articleHotList");
-//        if (CollUtil.isEmpty(articleHotList)) {
-//            articleHotList = articleService.list(Wrappers.<Article>lambdaQuery().eq(Article::getArticleHot, 1).select(Article::getArticleId, Article::getArticleTitle, Article::getArticleAddTime).last(" limit 5"));
-//            servletContext.setAttribute("articleHotList", articleHotList);
-//        }
+        List<Article> articleHotList = (List<Article>) servletContext.getAttribute("articleHotList");
+        if (CollUtil.isEmpty(articleHotList)) {
+            articleHotList = articleService.list(Wrappers.<Article>lambdaQuery().eq(Article::getArticleHot, 1).select(Article::getArticleId, Article::getArticleTitle, Article::getArticleAddTime).last(" limit 5"));
+            servletContext.setAttribute("articleHotList", articleHotList);
+        }
 
         /**
          * 热门标签处理
-         * 暂时不用
          */
-//        List<ArticleTag> articleTagList = (List<ArticleTag>) servletContext.getAttribute("articleTagList");
-//        if (CollUtil.isEmpty(articleTagList)) {
-//            articleTagList = articleTagService.list(Wrappers.<ArticleTag>lambdaQuery().select(ArticleTag::getArticleTagId, ArticleTag::getArticleTagName));
-//            servletContext.setAttribute("articleTagList", articleTagList);
-//        }
+        List<ArticleTag> articleTagList = (List<ArticleTag>) servletContext.getAttribute("articleTagList");
+        if (CollUtil.isEmpty(articleTagList)) {
+            articleTagList = articleTagService.list(Wrappers.<ArticleTag>lambdaQuery().select(ArticleTag::getArticleTagId, ArticleTag::getArticleTagName).last(" limit 10"));
+            servletContext.setAttribute("articleTagList", articleTagList);
+        }
 
         //广告
         /**

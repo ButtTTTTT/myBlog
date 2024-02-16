@@ -1,4 +1,4 @@
-<div class="col-xs-12 col2Padding" style="margin-bottom: 20px;">
+<div class="col-xs-12 col2Padding" style="margin-left: 10px; margin-bottom: 20px;">
     <div class="panel col-xs-12 col-sm-4">
         <div class="panel-body">
             <b>分享生活-感受生活</b>

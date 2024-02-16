@@ -4,23 +4,39 @@ myBlog:
   name: myBlog
   #版本
   version: 0.1.1
+# minio 参数配置
+minio:
+  #服务器地址及端口
+  endpoint: http://192.168.3.254:9000
+  #account
+  accessKey: minioadmin
+  #password
+  secretKey: minioadmin
+  #桶
+  bucket: file-list
+#服务器配置
 server:
+  #端口
   port: 2000
+  #tomcat配置
   tomcat:
     # tomcat的URI编码
     uri-encoding: UTF-8
     # 连接数满后的排队数，默认为100
     accept-count: 20
+    #线程配置
     threads:
       # tomcat最大线程数，默认为200
       max: 40
       # Tomcat启动初始化的线程数，默认值10
       min-spare: 20
-  #设置会话时间
+  #servlet 配置
   servlet:
+    #会话时间
     session:
       #Session超时时间设置为2小时，单位是秒，默认是30分钟
       timeout: 1800
+#spring框架
 spring:
   #静态文件地址
   resources:

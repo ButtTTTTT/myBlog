@@ -34,6 +34,7 @@ import java.util.concurrent.CompletionStage;
 
 @Controller
 @Slf4j
+@CrossOrigin
 public class ManageController {
     @Autowired
     private IUnknnService unknnService;
@@ -427,6 +428,7 @@ public class ManageController {
 
     /**
      * 禁用轮播图
+     *
      * @param carouselId
      * @return
      */

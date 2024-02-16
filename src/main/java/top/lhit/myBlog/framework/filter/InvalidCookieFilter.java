@@ -12,7 +12,7 @@ import java.io.IOException;
 @Component
 public class InvalidCookieFilter implements Filter {
     /**
-     * 过滤请求中cookie
+     * 过滤请求中无效cookie
      *
      * @param servletRequest
      * @param servletResponse
