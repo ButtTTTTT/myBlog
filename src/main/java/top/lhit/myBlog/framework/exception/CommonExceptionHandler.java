@@ -42,7 +42,11 @@ public class CommonExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public CommonResult handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+
+        log.info("CommonExceptionHandler.handleMethodArgumentNotValidException : 参数校验异常 =====> {} ",CommonResult.failed(e.getBindingResult().getFieldError().getDefaultMessage()));
+
         return CommonResult.failed(e.getBindingResult().getFieldError().getDefaultMessage());
+
     }
 
 }

@@ -3,6 +3,7 @@ package top.lhit.myBlog.framework.intercepter;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.extern.slf4j.Slf4j;
@@ -79,7 +80,11 @@ public class GlobalIntercepter implements HandlerInterceptor {
                     articleTypeTreeVo.setArticleList(articleService.list(queryWrapper));
                 }
             }
+
             servletContext.setAttribute("articleTypeList", articleTypeList);
+
+            log.info("GlobalIntercepter.preHandle :   ====> {}", JSONUtil.toJsonStr(articleTypeList));
+
         }
 
         /**

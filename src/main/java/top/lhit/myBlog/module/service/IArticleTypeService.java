@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import top.lhit.myBlog.common.utils.CommonResult;
 import top.lhit.myBlog.module.dto.aticle.ArticleTypeUpdateDto;
 import top.lhit.myBlog.module.entity.ArticleType;
+import top.lhit.myBlog.module.entity.User;
 import top.lhit.myBlog.module.vo.ArticleTypeTreeVo;
 import top.lhit.myBlog.module.vo.ArticleTypeVo;
 
@@ -42,4 +43,6 @@ public interface IArticleTypeService extends IService<ArticleType> {
     List<ArticleTypeTreeVo> getIndexArticleTypeList(String articleTypeParentId);
 
     CompletionStage<CommonResult> getArticleTypeChild(String articleTypeId);
+
+    CompletionStage<CommonResult> aTypeListAll();
 }

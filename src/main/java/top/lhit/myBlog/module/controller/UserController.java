@@ -34,7 +34,8 @@ import java.util.stream.Collectors;
  * @create 2021/12/21 22:19
  */
 @Controller
-@RequestMapping("/user")@CrossOrigin
+@RequestMapping("/user")
+@CrossOrigin
 @Slf4j
 public class UserController {
     @Autowired
@@ -200,7 +201,7 @@ public class UserController {
 
     /**
      * 发布文章方法
-     *
+     * @todo delete
      * @param publishArticleActionDto
      * @return
      */

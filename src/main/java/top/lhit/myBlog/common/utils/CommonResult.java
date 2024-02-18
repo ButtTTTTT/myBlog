@@ -2,6 +2,7 @@ package top.lhit.myBlog.common.utils;
 
 import com.baomidou.mybatisplus.extension.api.IErrorCode;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 通用返回对象
@@ -11,7 +12,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-@Builder
+@Builder@Slf4j
 public class CommonResult<T> {
     private long code;
 
@@ -55,11 +56,23 @@ public class CommonResult<T> {
     }
 
     /**
+     * 失败返回带数据结果
+     *
+     * @param data    获取的数据
+     * @param message 提示信息
+     */
+    public static <T> CommonResult<T> failed(T data, String message) {
+        return new CommonResult<T>(1000, message, data);
+    }
+    /**
      * 失败返回结果
      *
      * @param message 提示信息
      */
     public static <T> CommonResult<T> failed(String message) {
+
+        log.info("CommonResult.failed: 请求失败 ====> {}",new CommonResult<T>(1000, message, null));
+
         return new CommonResult<T>(1000, message, null);
     }
 

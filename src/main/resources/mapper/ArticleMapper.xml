@@ -57,24 +57,39 @@
     </select>
     <select id="tagArticleList" resultType="top.lhit.myBlog.module.vo.ArticleVo">
         SELECT
+
         atl.article_id,
+
         art.article_type_id,
+
         art.article_cover_url,
+
         art.article_title,
+
         art.article_add_time,
+
         art.article_faverite_No,
+
         art.article_watch_times,
+
         art.article_faver_rate
 
         FROM
+
         article_tag_list atl
+
         LEFT JOIN article art ON atl.article_id = art.article_id
 
         <where>
+
             not ISNULL(art.article_title)
+
             <if test="articleTagId != null and articleTagId != '' ">
+
                 and atl.article_tag_id = #{articleTagId}
+
             </if>
+
         </where>
 
     </select>

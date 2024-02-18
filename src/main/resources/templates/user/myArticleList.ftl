@@ -14,8 +14,7 @@
             <i class="icon-book"></i>我的文章
         </div>
         <div class="panel-body">
-
-
+<#--           遍历我的文章  -->
             <#if articleVoIPage?? && (articleVoIPage.list)?size gt 0 >
                 <#list articleVoIPage.list as articleVo>
                     <div class="col-xs-6 col-sm-4" style="padding: 2px;">
@@ -98,8 +97,14 @@
                     </div>
                 </div>
             <#else >
-                <#include "../import/nullData.ftl">
+                <#include "../import/nullArticleList.ftl">
             </#if>
+
+
+
+
+
+
         </div>
     </div>
 </div>

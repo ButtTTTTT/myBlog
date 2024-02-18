@@ -143,7 +143,9 @@ public class ManageController {
     @PostMapping("/unknn/user/update")
     @ResponseBody
     public CompletionStage<CommonResult> userUpdate(@Valid UserDto userDto) {
+
         return userService.postUserUpdate(userDto);
+
     }
 
     /**
@@ -155,7 +157,9 @@ public class ManageController {
     @PostMapping("/unknn/user/ban")
     @ResponseBody
     public CompletionStage<CommonResult> userBan(String userId) {
+
         return userService.postUserBan(userId);
+
     }
 
     /**

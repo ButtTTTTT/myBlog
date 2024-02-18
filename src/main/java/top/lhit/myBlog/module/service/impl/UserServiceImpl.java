@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -42,6 +43,7 @@ import java.util.concurrent.CompletionStage;
  * @since 2023-11-29
  */
 @Service
+@Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
     @Autowired
@@ -77,21 +79,38 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return CompletableFuture.supplyAsync(() -> {
 
             User user = userService.getById(userDto.getUserId());
+
             if (!ObjectUtil.isNull(user)) {
 
                 if (StrUtil.isBlank(userDto.getUserPassword())) {
+
                     userDto.setUserPassword(user.getUserPassword());
+
                     BeanUtils.copyProperties(userDto, user);
+
                 } else {
+
                     //用户密码 = md5 注册时间+用户明文密码
                     BeanUtils.copyProperties(userDto, user);
+
                     user.setUserPassword(SecureUtil.md5(user.getUserRegisterTime() + userDto.getUserPassword()));
+
                 }
+
                 if (userService.updateById(user)) {
+
+                    log.info("IuserService.postUserUpdate :  ====> {} ", CommonResult.success(user, "操作成功"));
+
                     return CommonResult.success("操作成功");
+
                 }
+
             }
+
+            log.info("IuserService.postUserUpdate :  ====> {} ", CommonResult.failed(user, "操作有误"));
+
             return CommonResult.failed("操作有误");
+
         });
     }
 
@@ -145,7 +164,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             IPage<User> page = userService.page(userPage, userLambdaQueryWrapper);
             //4
             model.addAttribute("userPage", CommonPage.restPage(page));
-            System.out.println("接口被请求了");
+
+            log.info("IUserService.getUserList : ===>  {} ","/unknn/userList");
+
             return "/unknn/userList";
         });
     }
@@ -251,4 +272,31 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return CommonResult.failed("错误Error");
         });
     }
+
+    @Override
+    public CompletionStage<Boolean> confirmUserArticleRight(User user) {
+        return CompletableFuture.supplyAsync(() -> {
+
+            if (ObjectUtil.isNotNull(user) && ObjectUtil.isNotNull(userService.getById(user.getUserId()))) {
+
+                if (user.getUserStatus()!=0){
+
+                    if (user.getUserPublishable()!=0){
+
+                        return true;
+
+                    }
+
+                }
+
+                return false;
+
+            }
+
+            return false;
+
+        });
+
+    }
+
 }

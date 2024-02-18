@@ -1,9 +1,13 @@
 package top.lhit.myBlog.module.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,9 +15,11 @@ import top.lhit.myBlog.common.utils.CommonResult;
 import top.lhit.myBlog.module.dto.aticle.ArticleTypeUpdateDto;
 import top.lhit.myBlog.module.entity.Article;
 import top.lhit.myBlog.module.entity.ArticleType;
+import top.lhit.myBlog.module.entity.User;
 import top.lhit.myBlog.module.mapper.ArticleTypeMapper;
 import top.lhit.myBlog.module.service.IArticleService;
 import top.lhit.myBlog.module.service.IArticleTypeService;
+import top.lhit.myBlog.module.service.IUserService;
 import top.lhit.myBlog.module.vo.ArticleTypeTreeVo;
 import top.lhit.myBlog.module.vo.ArticleTypeVo;
 
@@ -22,6 +28,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -32,6 +40,7 @@ import java.util.concurrent.CompletionStage;
  * @since 2021-12-21
  */
 @Service
+@Slf4j
 public class ArticleTypeServiceImpl extends ServiceImpl<ArticleTypeMapper, ArticleType> implements IArticleTypeService {
 
     @Autowired
@@ -44,6 +53,8 @@ public class ArticleTypeServiceImpl extends ServiceImpl<ArticleTypeMapper, Artic
     @Autowired
     private IArticleTypeService articleTypeService;
 
+    @Autowired
+    private IUserService userService;
 
     /**
      * 文章类型列表，包含文章数量
@@ -159,6 +170,45 @@ public class ArticleTypeServiceImpl extends ServiceImpl<ArticleTypeMapper, Artic
                     .select(ArticleType::getArticleTypeId, ArticleType::getArticleTypeName));
 
             return CommonResult.success(articleTypeList);
+        });
+    }
+
+    @Override
+    public CompletionStage<CommonResult> aTypeListAll() {
+        return CompletableFuture.supplyAsync(()->{
+
+
+
+                List<ArticleTypeTreeVo> articleTypeList = articleTypeService.getIndexArticleTypeList(null);
+                if (CollUtil.isNotEmpty(articleTypeList)) {
+                    for (ArticleTypeTreeVo articleTypeTreeVo : articleTypeList) {
+                        articleTypeTreeVo.setArticleTypeTreeVoList(articleTypeService.getIndexArticleTypeList(articleTypeTreeVo.getArticleTypeId()));
+                    }
+                }
+
+                //首页最新文章
+                for (ArticleTypeTreeVo articleTypeTreeVo : articleTypeList) {
+                    List<ArticleTypeTreeVo> articleTypeTreeVoList = articleTypeTreeVo.getArticleTypeTreeVoList();
+                    if (CollUtil.isNotEmpty(articleTypeTreeVoList)) {
+                        LambdaQueryWrapper<Article> queryWrapper = Wrappers.<Article>lambdaQuery()
+                                .in(Article::getArticleTypeId, articleTypeTreeVoList.stream().map(ArticleTypeTreeVo::getArticleTypeId).collect(Collectors.toList()))
+                                .select(Article::getArticleId,
+                                        Article::getArticleWatchTimes, //观看次数
+                                        Article::getArticleFaveriteNo,//点赞次数
+                                        Article::getArticleFaverRate,//收藏次数
+                                        Article::getArticleCoverUrl,
+                                        Article::getArticleAddTime,
+                                        Article::getArticleTitle)
+                                .orderByDesc(Article::getArticleAddTime)
+                                .last(" limit 6");
+                        articleTypeTreeVo.setArticleList(articleService.list(queryWrapper));
+                    }
+                }
+
+                log.info("IArticleTypeService.articleTypeListAll :   ====> {}", CommonResult.success(JSONUtil.toJsonStr(articleTypeList), "获取成功"));
+
+                return CommonResult.success(JSONUtil.toJsonStr(articleTypeList), "获取成功");
+
         });
     }
 }

@@ -27,4 +27,6 @@ public interface IUserService extends IService<User> {
     CompletionStage<CommonResult> userRegist(HttpServletRequest request, UserInfoDto userInfoDto);
 
     CompletionStage<CommonResult> userLogin(HttpServletRequest request, UserInfoDto userInfoDto);
+
+    CompletionStage<Boolean>  confirmUserArticleRight(User user);
 }

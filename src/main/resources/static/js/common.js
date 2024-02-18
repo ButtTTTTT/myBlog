@@ -1,6 +1,6 @@
 var basePort = "2000"
-var baseUrl = "http://127.0.0.1:" + basePort;
-
+var baseUrl = "http://39.101.142.240:" + basePort;
+/*   线上环境需要切换ip地址  */
 function checkNotNull(str) {
     if (str == null || str == "" || str.length < 1 || str == undefined) {
         return false;
@@ -8,8 +8,9 @@ function checkNotNull(str) {
     return true;
 }
 function getCurrentTime() {
-    var currentTime = new Date();
-    return currentTime;
+    var date = new Date();
+    var strDate = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate()+" "+date.getHours()+":"+date.getMinutes();
+    return strDate;
 }
 
 function getUUID() {
@@ -32,4 +33,10 @@ function zuiSuccessMsg(msg) {
         type: 'success',
         placement: 'center'
     }).show();
+}
+function generateOptions(target, optionsData) {
+    target.empty(); // 清空已有选项
+    optionsData.forEach(function (optionData) {
+        target.append(new Option(optionData.articleTypeName, optionData.articleTypeId)); // 添加选项
+    });
 }

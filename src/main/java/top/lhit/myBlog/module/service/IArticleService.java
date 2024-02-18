@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import top.lhit.myBlog.common.utils.CommonResult;
 import top.lhit.myBlog.module.dto.PublishArticleActionDto;
+import top.lhit.myBlog.module.dto.aticle.ArticleDto;
 import top.lhit.myBlog.module.entity.Article;
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.lhit.myBlog.module.entity.User;
@@ -92,4 +93,7 @@ public interface IArticleService extends IService<Article> {
     CompletionStage<CommonResult> articleGoodIncrease(HttpServletRequest request, String articleId);
 
 
+    CompletionStage<String> addNewArticle(User user);
+
+    CompletionStage<CommonResult> articlePublicsh(User user, ArticleDto articleDto);
 }

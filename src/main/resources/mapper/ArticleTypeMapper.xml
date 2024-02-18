@@ -27,6 +27,5 @@
         </choose>
         ORDER BY
         aty.article_type_sort
-
     </select>
 </mapper>

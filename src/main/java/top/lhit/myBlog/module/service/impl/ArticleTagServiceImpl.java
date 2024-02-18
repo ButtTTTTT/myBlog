@@ -36,19 +36,33 @@ public class ArticleTagServiceImpl extends ServiceImpl<ArticleTagMapper, Article
     @Override
     public CompletionStage<CommonResult> articleTagAdd(ArticleTag articleTag) {
         return CompletableFuture.supplyAsync(()->{
+
             servletContext.removeAttribute("articleTagList");
+
             String articleTagId = articleTag.getArticleTagId();
+
             if (StrUtil.isNotBlank(articleTagId)) {
+
                 if (articleTagService.updateById(articleTag)) {
+
                     return CommonResult.success("修改成功");
+
                 }
+
                 return CommonResult.failed("修改失败");
+
             }
+
             articleTag.setArticleTagAddTime(DateUtil.date());
+
             if (articleTagService.save(articleTag)) {
+
                 return CommonResult.success("文章标签添加成功");
+
             }
+
             return CommonResult.failed("文章标签添加失败");
+
         });
     }
 

@@ -25,3 +25,12 @@
     margin-right: 100px;
     float: left;
 }
+.article_editor_titile{
+
+    height: 64px;
+    margin: 8px 0;
+
+}
+.article_post_button{
+    margin: 8px 0;
+}
