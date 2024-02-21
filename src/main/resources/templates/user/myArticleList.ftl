@@ -20,7 +20,7 @@
                     <div class="col-xs-6 col-sm-4" style="padding: 2px;">
                         <div class="card">
                             <a href="/article?articleId=${(articleVo.articleId)!}" style="text-decoration:none">
-                                <img class="cardimg" src="${(articleVo.articleCoverUrl)!}"
+                                <img class="cardimg article_img" src="${(articleVo.articleCoverUrl)!}"
                                      alt="${(articleVo.articleTitle)!}">
                                 <div class="card-heading"><strong>${(articleVo.articleTitle)!}</strong></div>
                                 <div class="card-content text-muted">

@@ -403,7 +403,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                         /**
                          * 遍历查询是否已经存在
                          */
-                        ArticleTag result = articleTagService.getOne(queryWrapper.eq("articleTagName", tag));
+                        ArticleTag result = articleTagService.getOne(queryWrapper.eq("article_tag_name", tag));
 
                         if (result != null && !result.getArticleTagName().equals(tag)) {
                             // 如果标签名为空 ，则进行 新增标签 、 acticleid 关联处理
@@ -455,6 +455,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 article.setUserId(user.getUserId());
 
                 boolean saveArticle = articleService.save(article);
+
+
                 if (saveArticle){
 
                     return CommonResult.success("添加成功");

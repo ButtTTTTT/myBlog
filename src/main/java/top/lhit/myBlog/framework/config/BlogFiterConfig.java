@@ -8,6 +8,7 @@ import top.lhit.myBlog.framework.filter.InvalidCookieFilter;
 @Configuration
 @Slf4j
 public class BlogFiterConfig {
+
     @Autowired
     private InvalidCookieFilter invalidCookieFilter;
 
@@ -28,5 +29,7 @@ public class BlogFiterConfig {
         log.info("FilterRegistrationBean.invalidCookiedClean  ===> 开始对请求过滤无效的cookie");
 
         return filterRegistrationBean;
+
     }
+
 }

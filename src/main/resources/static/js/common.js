@@ -1,5 +1,6 @@
 var basePort = "2000"
 var baseUrl = "http://39.101.142.240:" + basePort;
+
 /*   线上环境需要切换ip地址  */
 function checkNotNull(str) {
     if (str == null || str == "" || str.length < 1 || str == undefined) {
@@ -7,9 +8,21 @@ function checkNotNull(str) {
     }
     return true;
 }
+
 function getCurrentTime() {
-    var date = new Date();
-    var strDate = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate()+" "+date.getHours()+":"+date.getMinutes();
+    const date = new Date();
+    const year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    month = month < 10 ? "0" + month : month;
+    let day = date.getDate();
+    day = day < 10 ? "0" + day : day;
+    let hour = date.getHours();
+    hour = hour < 10 ? "0" + hour : hour;
+    let minute = date.getMinutes();
+    minute = minute < 10 ? "0" + minute : minute;
+    let second = date.getSeconds();
+    second = second < 10 ? "0" + second : second;
+    const strDate = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
     return strDate;
 }
 
@@ -34,6 +47,7 @@ function zuiSuccessMsg(msg) {
         placement: 'center'
     }).show();
 }
+
 function generateOptions(target, optionsData) {
     target.empty(); // 清空已有选项
     optionsData.forEach(function (optionData) {

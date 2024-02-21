@@ -17,11 +17,12 @@
                     <ul>
                         <li><a href="/acticle/editNewArticle"><i class="icon-edit-sign"></i>编写文章</a></li>
                         <li><a href="/acticle/editNewArticle"><i class="icon-edit-sign"></i>历史文章</a></li>
+                        <li><a href="/user/collection/list?pageNumber=1"><i class="icon-tags"></i>我的收藏</a></li>
                         <li><a href="/acticle/editNewArticle"><i class="icon-edit-sign"></i>草稿夹</a></li>
                     </ul>
                 </li>
                 <li>
-                    <a href="/user/myArticleList?pageNumber=1"><i class="icon-book"></i>笔记本</a>
+                    <a href="/user/myArticleList?pageNumber=1"><i class="icon icon-trophy"></i>笔记本</a>
                     <ul>
                         <li><a href="/acticle/editNewArticle"><i class="icon-edit-sign"></i>编写笔记</a></li>
                         <li><a href="/acticle/editNewArticle"><i class="icon-edit-sign"></i>历史笔记</a></li>
