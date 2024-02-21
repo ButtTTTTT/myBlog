@@ -61,7 +61,7 @@
                                     <div class="card">
                                         <a href="/article?articleId=${(indexArticle.articleId)!}"
                                            style="text-decoration:none">
-                                            <img class="cardimg " src="${(indexArticle.articleCoverUrl)!}"
+                                            <img class="cardimg " style="width: 257px;height: 140px"  src="${(indexArticle.articleCoverUrl)!}"
                                                  alt="${(indexArticle.articleTitle)!}">
                                             <div class="card-heading"><strong>${(indexArticle.articleTitle)!}</strong>
                                             </div>
