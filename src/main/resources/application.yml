@@ -7,13 +7,13 @@ myBlog:
 # minio 参数配置
 minio:
   #服务器地址及端口
-  endpoint: http://192.168.3.254:9000
+  endpoint: http://39.101.142.240:9000
   #account
   accessKey: minioadmin
   #password
   secretKey: minioadmin
   #桶
-  bucket: file-list
+  bucket: test
 #服务器配置
 server:
   #端口

@@ -58,27 +58,6 @@ public class UserController {
     private ICommentReplyService commentReplyService;
 
     /**
-     * 文件上传
-     *
-     * @param file
-     * @return
-     */
-    @PostMapping("/uploadFile")
-    @ResponseBody
-    public String uploadFile(HttpServletRequest request, MultipartFile file) {
-        if (file.isEmpty()) {
-            return null;
-        }
-        User user = (User) request.getSession().getAttribute("user");
-        if (Objects.isNull(user.getUserPublishable()) || user.getUserPublishable() != 0) {
-            return null;
-        }
-
-        return uploadFileListService.getUploadFileUrl(file);
-    }
-
-
-    /**
      * 用户管理页面
      *
      * @return
